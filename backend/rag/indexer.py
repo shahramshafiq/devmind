@@ -1,10 +1,10 @@
 import os
 from pathlib import Path
 import chromadb
-import git
+from github import Github
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from rag.embedder import embed
-from config import CHROMADB_PATH, REPOS_PATH
+from config import CHROMADB_PATH, REPOS_PATH, GITHUB_TOKEN
 
 CODE_EXTENSIONS = {
     '.py', '.js', '.ts', '.jsx', '.tsx',
@@ -17,6 +17,7 @@ SKIP_DIRS = {'node_modules', '.git', 'venv', '__pycache__', '.venv', 'dist', 'bu
 
 _chroma = None
 
+
 def get_chroma():
     global _chroma
     if _chroma is None:
@@ -25,12 +26,40 @@ def get_chroma():
     return _chroma
 
 
-def clone_repo(repo_url, repo_name):
+def download_repo(repo_url, repo_name):
     target = os.path.join(REPOS_PATH, repo_name)
     if os.path.exists(target):
         return target
-    os.makedirs(REPOS_PATH, exist_ok=True)
-    git.Repo.clone_from(repo_url, target, depth=1)
+    os.makedirs(target, exist_ok=True)
+
+    parts = repo_url.rstrip('/').split('/')
+    owner, repo_slug = parts[-2], parts[-1]
+
+    g = Github(GITHUB_TOKEN)
+    gh_repo = g.get_repo(f"{owner}/{repo_slug}")
+
+    stack = [""]
+    while stack:
+        current_path = stack.pop()
+        try:
+            items = gh_repo.get_contents(current_path)
+        except Exception:
+            continue
+        for item in items:
+            if item.type == "dir":
+                if item.name not in SKIP_DIRS:
+                    stack.append(item.path)
+            else:
+                ext = os.path.splitext(item.name)[1]
+                if ext in CODE_EXTENSIONS:
+                    local_path = os.path.join(target, item.path)
+                    os.makedirs(os.path.dirname(local_path), exist_ok=True)
+                    try:
+                        with open(local_path, 'wb') as fh:
+                            fh.write(item.decoded_content)
+                    except Exception:
+                        pass
+
     return target
 
 
@@ -48,7 +77,7 @@ def collect_files(repo_path):
 
 
 def index_repo(repo_url, repo_name):
-    repo_path = clone_repo(repo_url, repo_name)
+    repo_path = download_repo(repo_url, repo_name)
     files = collect_files(repo_path)
 
     splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100)
