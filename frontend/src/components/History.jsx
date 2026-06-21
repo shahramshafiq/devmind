@@ -105,7 +105,7 @@ export default function History() {
           Run History
         </h2>
         <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', marginTop: 5 }}>
-          Every pipeline run — click a row to expand PR details.
+          Every pipeline run. Click a row to expand PR details.
         </p>
       </div>
 
