@@ -1,7 +1,10 @@
 import os
 import sys
+import json
+import re as _re
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
@@ -216,6 +219,146 @@ def run_from_issue(body: RunFromIssueRequest):
         "logs": final_state["logs"],
         "test_result": test_result
     }
+
+
+@app.post("/api/run-stream")
+def run_stream(body: RunFromIssueRequest):
+    from github_client.client import parse_issue_url, fetch_issue, create_pr
+    from rag.indexer import index_repo, get_chroma
+    from graph.pipeline import pipeline
+    from github import GithubException
+
+    try:
+        owner, repo_name, issue_number = parse_issue_url(body.issue_url)
+    except ValueError:
+        return {"error": "Invalid GitHub issue URL. Expected: https://github.com/owner/repo/issues/42"}
+
+    repo_full_name = f"{owner}/{repo_name}"
+    repo_url = f"https://github.com/{repo_full_name}"
+    collection_name = repo_name.replace('-', '_').replace('.', '_')
+
+    try:
+        issue = fetch_issue(repo_full_name, issue_number)
+    except GithubException as e:
+        if e.status == 404:
+            return {"error": f"Issue #{issue_number} or repository '{repo_full_name}' was not found."}
+        return {"error": f"GitHub error ({e.status}): {e.data.get('message', 'unknown error')}"}
+    except Exception as e:
+        return {"error": f"Could not fetch issue: {str(e)}"}
+
+    if issue["state"] != "open":
+        return {"error": f"Issue #{issue_number} is already {issue['state']}."}
+
+    chroma = get_chroma()
+    try:
+        chroma.get_collection(collection_name)
+        repo_indexed = False
+    except Exception:
+        try:
+            index_repo(repo_url, repo_name)
+            repo_indexed = True
+        except GithubException as e:
+            if e.status == 404:
+                return {"error": f"Repository '{repo_full_name}' was not found or is private."}
+            return {"error": f"Failed to index repository: {e.data.get('message', str(e))}"}
+
+    initial_state = {
+        "repo_url": repo_url, "repo_name": repo_name,
+        "collection_name": collection_name,
+        "issue_title": issue["title"], "issue_body": issue["body"],
+        "issue_number": issue_number,
+        "code_context": "", "analysis": "", "plan": "",
+        "code_changes": "", "tests": "",
+        "review_decision": "", "review_feedback": "",
+        "pr_title": "", "pr_body": "",
+        "iteration_count": 0, "logs": []
+    }
+
+    def _sse(data: dict) -> str:
+        return f"data: {json.dumps(data)}\n\n"
+
+    def event_stream():
+        fs = dict(initial_state)
+        all_logs = []
+
+        try:
+            for chunk in pipeline.stream(initial_state, stream_mode="updates"):
+                for node_name, update in chunk.items():
+                    node_logs = []
+                    for key, val in update.items():
+                        if key == "logs":
+                            all_logs.extend(val)
+                            node_logs = val
+                        else:
+                            fs[key] = val
+                    event = {"type": "agent_done", "agent": node_name, "logs": node_logs}
+                    if node_name == "critic":
+                        event["decision"] = fs.get("review_decision", "")
+                    yield _sse(event)
+        except Exception as e:
+            msg = str(e)
+            if '429' in msg or 'rate_limit_exceeded' in msg:
+                wm = _re.search(r'try again in ([\d.]+m[\d.]+s|[\d.]+s)', msg)
+                wait = f" Try again in {wm.group(1)}." if wm else " Please wait a few minutes."
+                yield _sse({"type": "error", "message": f"Groq API rate limit reached.{wait}"})
+            else:
+                yield _sse({"type": "error", "message": f"Pipeline error: {msg[:300]}"})
+            return
+
+        fs["logs"] = all_logs
+
+        from sandbox.runner import run_tests
+        test_result = run_tests(fs.get("code_changes", ""), fs.get("tests", ""))
+
+        pr_body = fs.get("pr_body") or ""
+        if fs.get("review_decision") == "REJECT":
+            pr_body = (
+                "> **AI Review: Needs Work** — This PR reached the iteration limit without full approval.\n\n"
+                + pr_body
+            )
+
+        try:
+            pr_result = create_pr(
+                repo_full_name=repo_full_name,
+                issue_number=issue_number,
+                pr_title=fs["pr_title"],
+                pr_body=pr_body,
+                code_changes_text=fs["code_changes"]
+            )
+        except Exception as e:
+            yield _sse({"type": "error", "message": f"Failed to create PR: {str(e)[:200]}"})
+            return
+
+        tr = test_result or {}
+        try:
+            save_run({
+                "issue_title": issue["title"], "issue_number": issue_number,
+                "repo_name": repo_name, "review_decision": fs["review_decision"],
+                "iterations": fs["iteration_count"], "pr_url": pr_result.get("pr_url"),
+                "pr_title": fs["pr_title"], "pr_body": pr_body,
+                "tests_passed": tr.get("passed_count"), "tests_failed": tr.get("failed_count"),
+                "tests_total": tr.get("total"),
+            })
+        except Exception:
+            pass
+
+        yield _sse({
+            "type": "result",
+            "issue": f"#{issue_number}: {issue['title']}",
+            "repo_freshly_indexed": repo_indexed,
+            "review_decision": fs["review_decision"],
+            "iterations": fs["iteration_count"],
+            "pr_url": pr_result["pr_url"],
+            "pr_title": fs["pr_title"],
+            "pr_body": pr_body,
+            "branch": pr_result["branch"],
+            "files_committed": pr_result["files_committed"],
+            "logs": all_logs,
+            "test_result": test_result,
+        })
+
+    return StreamingResponse(event_stream(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
 
 @app.post("/api/run-pipeline")

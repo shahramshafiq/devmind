@@ -9,6 +9,7 @@ class AgentState(TypedDict):
     collection_name: str
     issue_title: str
     issue_body: str
+    issue_number: int
 
     # Analyst output
     code_context: str
