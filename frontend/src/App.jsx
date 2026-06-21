@@ -13,6 +13,8 @@ import ResultPanel from './components/ResultPanel'
 import TestResultPanel from './components/TestResultPanel'
 import History from './components/History'
 import IndexedRepos from './components/IndexedRepos'
+import About from './components/About'
+import Contact from './components/Contact'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -192,6 +194,22 @@ export default function App() {
             {page === 'history' && (
               <motion.div key="history" {...pageTransition}>
                 <History />
+              </motion.div>
+            )}
+
+            {/* About page */}
+            {page === 'about' && (
+              <motion.div key="about" {...pageTransition}>
+                <About />
+                <Footer />
+              </motion.div>
+            )}
+
+            {/* Contact page */}
+            {page === 'contact' && (
+              <motion.div key="contact" {...pageTransition}>
+                <Contact />
+                <Footer />
               </motion.div>
             )}
 
