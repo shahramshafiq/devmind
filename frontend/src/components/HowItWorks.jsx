@@ -42,7 +42,7 @@ const AGENTS = [
   },
   {
     num: '05', name: 'Code Critic', color: '#ff4500',
-    desc: 'Reviews the generated code for correctness, security, and test coverage. If it finds issues, it rejects and sends the Developer back — up to 5 iterations.',
+    desc: 'Reviews the generated code for correctness, security, and test coverage. If it finds issues, it rejects and sends the Developer back up to 5 iterations.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -62,75 +62,71 @@ const AGENTS = [
   },
 ]
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-}
-
-const cardVariants = {
-  hidden:  { opacity: 0, y: 36 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.62, ease: [0.25, 0.46, 0.45, 0.94] } },
-}
-
-function AgentCard({ agent }) {
+function AgentCard({ agent, index }) {
   const [hovered, setHovered] = useState(false)
 
   return (
     <motion.div
-      variants={cardVariants}
-      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.55, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
+      viewport={{ once: true, margin: '-40px' }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        padding: '26px 24px',
-        background: hovered ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.025)',
-        border: `1px solid ${hovered ? agent.color + '30' : 'rgba(255,255,255,0.07)'}`,
-        borderRadius: 16,
+        padding: '28px 26px',
+        background: hovered ? '#161616' : '#111111',
+        border: `1px solid ${hovered ? agent.color + '28' : 'rgba(255,255,255,0.07)'}`,
+        borderRadius: 18,
         position: 'relative', overflow: 'hidden',
         cursor: 'default',
-        boxShadow: hovered ? `0 8px 28px rgba(0,0,0,0.22), 0 0 32px ${agent.color}0d` : 'none',
-        transition: 'all 0.25s ease',
+        transition: 'background 0.2s, border-color 0.2s, transform 0.2s',
+        transform: hovered ? 'translateY(-4px)' : 'none',
       }}
     >
-      {/* Ambient glow */}
+      {/* Top-right glow */}
       <div style={{
         position: 'absolute', top: -50, right: -50,
-        width: 130, height: 130, borderRadius: '50%',
-        background: `radial-gradient(circle, ${agent.color}14, transparent 70%)`,
+        width: 140, height: 140, borderRadius: '50%',
+        background: `radial-gradient(circle, ${agent.color}18, transparent 70%)`,
+        opacity: hovered ? 1 : 0.45,
+        transition: 'opacity 0.25s',
         pointerEvents: 'none',
-        opacity: hovered ? 1 : 0.5,
-        transition: 'opacity 0.3s',
       }} />
 
       {/* Number */}
       <div style={{
         fontSize: 11, fontFamily: "'JetBrains Mono', monospace",
-        color: agent.color, fontWeight: 600, letterSpacing: '0.05em',
-        marginBottom: 14, opacity: 0.65,
+        color: agent.color, fontWeight: 600, letterSpacing: '0.06em',
+        marginBottom: 16, opacity: 0.7,
       }}>
         {agent.num}
       </div>
 
       {/* Icon */}
       <div style={{
-        width: 42, height: 42, borderRadius: 11,
+        width: 44, height: 44, borderRadius: 12,
         background: `${agent.color}14`,
-        border: `1px solid ${agent.color}28`,
+        border: `1px solid ${agent.color}25`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: agent.color, marginBottom: 16,
-        transition: 'background 0.25s',
-        ...(hovered ? { background: `${agent.color}20` } : {}),
+        color: agent.color, marginBottom: 18,
+        transition: 'background 0.2s',
+        ...(hovered ? { background: `${agent.color}22` } : {}),
       }}>
         {agent.icon}
       </div>
 
       {/* Name */}
-      <div style={{ fontSize: 15.5, fontWeight: 700, color: '#f1f0ff', marginBottom: 8, letterSpacing: '-0.01em' }}>
+      <div style={{
+        fontSize: 15.5, fontWeight: 700, color: '#ffffff',
+        marginBottom: 10, letterSpacing: '-0.01em',
+        fontFamily: "'Syne', sans-serif",
+      }}>
         {agent.name}
       </div>
 
       {/* Desc */}
-      <div style={{ fontSize: 13.5, color: 'rgba(241,240,255,0.42)', lineHeight: 1.65 }}>
+      <div style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.4)', lineHeight: 1.65 }}>
         {agent.desc}
       </div>
     </motion.div>
@@ -139,74 +135,50 @@ function AgentCard({ agent }) {
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" style={{ padding: '100px 24px', maxWidth: 1160, margin: '0 auto' }}>
+    <section id="how-it-works" style={{ padding: '120px 48px', maxWidth: 1200, margin: '0 auto' }}>
 
-      {/* Section header */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.65 }}
-        viewport={{ once: true, margin: '-80px' }}
-        style={{ textAlign: 'center', marginBottom: 68 }}
-      >
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 7,
-          padding: '5px 16px',
-          background: 'rgba(255,69,0,0.07)',
-          border: '1px solid rgba(255,69,0,0.22)',
-          borderRadius: 100,
-          fontSize: 11.5, color: 'rgba(255,140,66,0.8)', fontWeight: 600,
-          letterSpacing: '0.08em', textTransform: 'uppercase',
-          marginBottom: 22,
-        }}>
-          The Pipeline
+      {/* Header row */}
+      <div style={{ marginBottom: 64 }}>
+        <div className="section-label">The Pipeline</div>
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24 }}>
+          <h2 style={{
+            fontFamily: "'Syne', sans-serif",
+            fontSize: 'clamp(34px, 4.5vw, 58px)',
+            fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.05,
+            color: '#ffffff',
+          }}>
+            How DevMind<br />Works
+          </h2>
+          <p style={{
+            fontSize: 16, color: 'rgba(255,255,255,0.42)',
+            maxWidth: 400, lineHeight: 1.7, marginBottom: 4,
+          }}>
+            Six AI agents collaborate in sequence. Each hands off full context to the next, building toward a production-ready pull request.
+          </p>
         </div>
+      </div>
 
-        <h2 style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: 'clamp(30px, 4vw, 52px)',
-          fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.1,
-          color: '#f1f0ff', marginBottom: 16,
-        }}>
-          How DevMind works
-        </h2>
+      {/* Grid */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: 14,
+      }}>
+        {AGENTS.map((agent, i) => <AgentCard key={agent.name} agent={agent} index={i} />)}
+      </div>
 
-        <p style={{ fontSize: 17, color: 'rgba(241,240,255,0.44)', maxWidth: 500, margin: '0 auto', lineHeight: 1.72 }}>
-          Six AI agents collaborate in sequence. Each hands off full context to the next,
-          building toward a production-ready pull request.
-        </p>
-      </motion.div>
-
-      {/* Cards */}
+      {/* Self-correction note */}
       <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-50px' }}
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: 14,
-        }}
-      >
-        {AGENTS.map(agent => <AgentCard key={agent.name} agent={agent} />)}
-      </motion.div>
-
-      {/* Footer note */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.7 }}
-        viewport={{ once: true }}
-        style={{ textAlign: 'center', marginTop: 44 }}
+        initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.6 }} viewport={{ once: true }}
+        style={{ marginTop: 40, display: 'flex', justifyContent: 'center' }}
       >
         <span style={{
-          display: 'inline-block',
-          padding: '5px 18px',
+          padding: '6px 20px',
           border: '1px solid rgba(255,255,255,0.07)',
           borderRadius: 100,
-          background: 'rgba(255,255,255,0.02)',
-          fontSize: 12.5, color: 'rgba(255,255,255,0.2)',
+          background: '#111111',
+          fontSize: 12.5, color: 'rgba(255,255,255,0.22)',
         }}>
           The Critic loops back to the Developer up to 5 times for self-correction
         </span>
