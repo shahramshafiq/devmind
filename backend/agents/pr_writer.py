@@ -32,8 +32,6 @@ BODY:
 
 ## Testing
 [bullet points describing what the tests cover]
-
-Closes #{state.get('issue_number', 'N/A')}
 """
 
     response = llm.invoke([SystemMessage(content=SYSTEM), HumanMessage(content=prompt)])
@@ -53,6 +51,12 @@ Closes #{state.get('issue_number', 'N/A')}
 
     if body_start is not None:
         pr_body = "\n".join(lines[body_start:]).strip()
+        # strip any "Closes #" the LLM may have hallucinated, then add the real one
+        clean = [l for l in pr_body.splitlines() if not l.strip().lower().startswith("closes #")]
+        pr_body = "\n".join(clean).strip()
+        issue_num = state.get("issue_number")
+        if issue_num:
+            pr_body += f"\n\nCloses #{issue_num}"
 
     return {
         "pr_title": pr_title,
