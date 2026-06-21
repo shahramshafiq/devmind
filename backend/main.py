@@ -147,7 +147,13 @@ def run_from_issue(body: RunFromIssueRequest):
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return {"error": f"Pipeline failed: {type(e).__name__}: {str(e)}"}
+        msg = str(e)
+        if '429' in msg or 'rate_limit_exceeded' in msg:
+            import re
+            wait_m = re.search(r'try again in ([\d.]+m[\d.]+s|[\d.]+s|[\d.]+ minutes?)', msg)
+            wait_str = f" Try again in {wait_m.group(1)}." if wait_m else " Please wait a few minutes."
+            return {"error": f"Groq API rate limit reached — you've used your daily token quota.{wait_str}"}
+        return {"error": f"Pipeline error: {type(e).__name__}: {msg[:300]}"}
 
     from sandbox.runner import run_tests
     test_result = run_tests(
