@@ -17,7 +17,7 @@ const FEATURES = [
   },
   {
     title: '6-Agent AI Pipeline',
-    desc: 'Analyst, Architect, Developer, QA, Critic, and PR Writer — each specialized and handed full context from the one before.',
+    desc: 'Analyst, Architect, Developer, QA, Critic, and PR Writer. Each agent is specialized and receives full context from the one before it.',
     color: '#ff8c42',
     accent: false,
     icon: (

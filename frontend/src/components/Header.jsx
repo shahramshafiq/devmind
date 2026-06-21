@@ -111,7 +111,7 @@ export default function Header({ backendOk, page, setPage }) {
         </div>
 
         <button
-          onClick={() => { setPage('contact') }}
+          onClick={() => scrollTo('try-it')}
           onMouseEnter={() => setTryH(true)}
           onMouseLeave={() => setTryH(false)}
           className="btn-white"
