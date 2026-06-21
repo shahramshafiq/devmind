@@ -8,6 +8,9 @@ from dotenv import load_dotenv
 load_dotenv()
 sys.path.insert(0, os.path.dirname(__file__))
 
+from database.db import init_db, save_run, get_history
+init_db()
+
 app = FastAPI(title="DevMind API", version="0.1.0")
 
 app.add_middleware(
@@ -48,6 +51,11 @@ class RunFromIssueRequest(BaseModel):
 @app.get("/health")
 def health():
     return {"status": "running", "project": "DevMind"}
+
+
+@app.get("/api/history")
+def history():
+    return {"runs": get_history()}
 
 
 @app.post("/api/test-llm")
@@ -137,6 +145,21 @@ def run_from_issue(body: RunFromIssueRequest):
         pr_body=pr_body,
         code_changes_text=final_state["code_changes"]
     )
+
+    tr = test_result or {}
+    save_run({
+        "issue_title":     issue["title"],
+        "issue_number":    issue_number,
+        "repo_name":       repo_name,
+        "review_decision": final_state["review_decision"],
+        "iterations":      final_state["iteration_count"],
+        "pr_url":          pr_result.get("pr_url"),
+        "pr_title":        final_state["pr_title"],
+        "pr_body":         pr_body,
+        "tests_passed":    tr.get("passed"),
+        "tests_failed":    tr.get("failed"),
+        "tests_total":     tr.get("total"),
+    })
 
     return {
         "issue": f"#{issue_number}: {issue['title']}",
