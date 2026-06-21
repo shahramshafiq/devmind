@@ -1,4 +1,4 @@
-export default function Header({ backendOk }) {
+export default function Header({ backendOk, page, setPage }) {
   const statusColor  = backendOk === null ? 'rgba(255,255,255,0.25)' : backendOk ? '#4ade80' : '#f87171'
   const statusBg     = backendOk === null ? 'rgba(255,255,255,0.04)' : backendOk ? 'rgba(74,222,128,0.08)' : 'rgba(248,113,113,0.08)'
   const statusBorder = backendOk === null ? 'rgba(255,255,255,0.07)'  : backendOk ? 'rgba(74,222,128,0.2)'  : 'rgba(248,113,113,0.2)'
@@ -32,6 +32,21 @@ export default function Header({ backendOk }) {
             AI CODE ENGINEER
           </div>
         </div>
+      </div>
+
+      {/* Nav */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        {['home', 'history'].map(p => (
+          <button key={p} onClick={() => setPage(p)} style={{
+            padding: '6px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600,
+            border: 'none', cursor: 'pointer', transition: 'all 0.18s',
+            background: page === p ? 'rgba(139,92,246,0.18)' : 'transparent',
+            color: page === p ? '#c084fc' : 'rgba(255,255,255,0.35)',
+            textTransform: 'capitalize',
+          }}>
+            {p === 'home' ? 'Home' : 'History'}
+          </button>
+        ))}
       </div>
 
       {/* Right */}

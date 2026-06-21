@@ -7,6 +7,7 @@ import AgentPipeline from './components/AgentPipeline'
 import LogTimeline from './components/LogTimeline'
 import ResultPanel from './components/ResultPanel'
 import TestResultPanel from './components/TestResultPanel'
+import History from './components/History'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -34,6 +35,7 @@ function parseSlug(url) {
 }
 
 export default function App() {
+  const [page, setPage]       = useState('home')   // home | history
   const [screen, setScreen]   = useState('idle')   // idle | running | done | error
   const [issueUrl, setIssueUrl] = useState('')
   const [statuses, setStatuses] = useState(Array(6).fill('waiting'))
@@ -152,18 +154,19 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
       <Background />
-      <Header backendOk={backendOk} />
+      <Header backendOk={backendOk} page={page} setPage={setPage} />
 
       <main style={{ position: 'relative', zIndex: 10 }}>
+        {page === 'history' && <History />}
 
-        {screen === 'idle' && (
+        {page === 'home' && screen === 'idle' && (
           <div style={{ animation: 'fade-in 0.5s ease-out' }}>
             <Hero />
             <InputPanel issueUrl={issueUrl} setIssueUrl={setIssueUrl} onRun={handleRun} />
           </div>
         )}
 
-        {screen !== 'idle' && (
+        {page === 'home' && screen !== 'idle' && (
           <div style={{ maxWidth: 1200, margin: '0 auto', padding: '22px 32px 60px', animation: 'fade-in 0.4s ease-out' }}>
 
             {/* Status bar */}
