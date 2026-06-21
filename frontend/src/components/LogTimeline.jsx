@@ -1,13 +1,13 @@
 import { useRef, useEffect } from 'react'
 
 const COLORS = {
-  'Issue Analyst': '#818cf8',
-  'Architect':     '#a78bfa',
-  'Developer':     '#c084fc',
-  'QA Engineer':   '#e879f9',
-  'Code Critic':   '#f472b6',
-  'PR Writer':     '#fb7185',
-  'DevMind':       '#94a3b8',
+  'Issue Analyst': '#ff6b35',
+  'Architect':     '#ff8c42',
+  'Developer':     '#ffab3e',
+  'QA Engineer':   '#ff5c28',
+  'Code Critic':   '#ff4500',
+  'PR Writer':     '#e03500',
+  'DevMind':       '#ff8c00',
 }
 
 export default function LogTimeline({ logs, isRunning }) {
@@ -31,10 +31,10 @@ export default function LogTimeline({ logs, isRunning }) {
           Agent Output
         </span>
         {isRunning ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#a78bfa', fontWeight: 700 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#ff6b35', fontWeight: 700 }}>
             <div style={{ position: 'relative', width: 6, height: 6 }}>
-              <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#a78bfa', animation: 'ripple 1s ease-in-out infinite' }} />
-              <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#a78bfa' }} />
+              <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#ff4500', animation: 'ripple 1s ease-in-out infinite' }} />
+              <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#ff4500' }} />
             </div>
             LIVE
           </div>

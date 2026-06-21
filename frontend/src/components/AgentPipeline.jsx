@@ -52,7 +52,7 @@ export default function AgentPipeline({ agents, statuses, activeIdx, elapsed, is
         <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
           <div style={{
             height: '100%', borderRadius: 2,
-            background: 'linear-gradient(90deg, #7c3aed, #a855f7, #e879f9)',
+            background: 'linear-gradient(90deg, #ff6b35, #ff4500, #e03000)',
             width: `${progress}%`,
             transition: 'width 0.55s cubic-bezier(0.4, 0, 0.2, 1)',
           }} />

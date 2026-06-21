@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 
 const AGENTS = [
-  { label: 'Issue Analyst', color: '#818cf8' },
-  { label: 'Architect',     color: '#a78bfa' },
-  { label: 'Developer',     color: '#c084fc' },
-  { label: 'QA Engineer',   color: '#e879f9' },
-  { label: 'Code Critic',   color: '#f472b6' },
-  { label: 'PR Writer',     color: '#fb7185' },
+  { label: 'Issue Analyst', color: '#ff6b35' },
+  { label: 'Architect',     color: '#ff8c42' },
+  { label: 'Developer',     color: '#ffab3e' },
+  { label: 'QA Engineer',   color: '#ff5c28' },
+  { label: 'Code Critic',   color: '#ff4500' },
+  { label: 'PR Writer',     color: '#e03500' },
 ]
 
 const STATS = [
@@ -35,13 +35,13 @@ function PrimaryBtn({ children, onClick }) {
       onMouseLeave={() => setH(false)}
       style={{
         padding: '13px 30px',
-        background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)',
+        background: 'linear-gradient(135deg, #ff4500 0%, #ff8c00 100%)',
         border: 'none', borderRadius: 12,
         color: 'white', fontSize: 15, fontWeight: 700,
         cursor: 'pointer',
         boxShadow: h
-          ? '0 0 40px rgba(124,58,237,0.7), 0 8px 28px rgba(0,0,0,0.35)'
-          : '0 0 26px rgba(124,58,237,0.42), 0 4px 16px rgba(0,0,0,0.25)',
+          ? '0 0 40px rgba(255,69,0,0.7), 0 8px 28px rgba(0,0,0,0.35)'
+          : '0 0 26px rgba(255,69,0,0.42), 0 4px 16px rgba(0,0,0,0.25)',
         transform: h ? 'translateY(-2px)' : 'translateY(0)',
         transition: 'box-shadow 0.2s, transform 0.18s',
         letterSpacing: '0.01em',
@@ -99,10 +99,10 @@ export default function Hero() {
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '6px 18px',
-            background: 'rgba(124,58,237,0.08)',
-            border: '1px solid rgba(124,58,237,0.28)',
+            background: 'rgba(255,69,0,0.08)',
+            border: '1px solid rgba(255,69,0,0.3)',
             borderRadius: 100,
-            fontSize: 13, color: '#c4b5fd', fontWeight: 500,
+            fontSize: 13, color: '#ff8c42', fontWeight: 500,
           }}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
@@ -171,7 +171,7 @@ export default function Hero() {
               <div style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 26, fontWeight: 900,
-                color: '#c4b5fd', letterSpacing: '-0.035em',
+                color: '#ff8c42', letterSpacing: '-0.035em',
               }}>
                 {s.val}
               </div>

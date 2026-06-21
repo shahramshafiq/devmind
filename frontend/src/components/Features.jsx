@@ -5,7 +5,7 @@ const FEATURES = [
   {
     title: 'RAG Codebase Indexing',
     desc: 'The entire GitHub repository is indexed with ChromaDB and sentence-transformers before any agent writes a line of code. Every decision is grounded in your real codebase, not generic patterns.',
-    color: '#818cf8',
+    color: '#ff6b35',
     large: false,
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
@@ -18,7 +18,7 @@ const FEATURES = [
   {
     title: '6-Agent AI Pipeline',
     desc: 'Analyst, Architect, Developer, QA, Critic, and PR Writer — each specialized and handed full context from the one before.',
-    color: '#a78bfa',
+    color: '#ff8c42',
     large: false,
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
@@ -30,7 +30,7 @@ const FEATURES = [
   {
     title: 'Real Pull Requests',
     desc: 'Not simulated output. DevMind pushes code to a new branch and opens an actual GitHub PR with a professional description.',
-    color: '#c084fc',
+    color: '#ffab3e',
     large: false,
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
@@ -42,7 +42,7 @@ const FEATURES = [
   {
     title: 'Critic Review Loop',
     desc: 'The Code Critic reviews generated output and loops the Developer back up to 5 times until the code meets quality standards. Self-correcting by design.',
-    color: '#e879f9',
+    color: '#ff5c28',
     large: false,
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
@@ -54,7 +54,7 @@ const FEATURES = [
   {
     title: 'pytest Sandbox',
     desc: 'Every test suite runs in an isolated tempfile environment before the PR is created. Tests must pass before any code reaches GitHub.',
-    color: '#f472b6',
+    color: '#ff4500',
     large: false,
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
@@ -65,7 +65,7 @@ const FEATURES = [
   {
     title: 'Multi-Repo Support',
     desc: 'Works with any public GitHub repository in any language. ChromaDB caches indexed repos for significantly faster repeat runs.',
-    color: '#fb7185',
+    color: '#e03500',
     large: false,
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
@@ -168,10 +168,10 @@ export default function Features() {
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 7,
           padding: '5px 16px',
-          background: 'rgba(124,58,237,0.07)',
-          border: '1px solid rgba(124,58,237,0.24)',
+          background: 'rgba(255,69,0,0.07)',
+          border: '1px solid rgba(255,69,0,0.22)',
           borderRadius: 100,
-          fontSize: 11.5, color: 'rgba(196,181,253,0.75)', fontWeight: 600,
+          fontSize: 11.5, color: 'rgba(255,140,66,0.8)', fontWeight: 600,
           letterSpacing: '0.08em', textTransform: 'uppercase',
           marginBottom: 22,
         }}>

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 
 const AGENTS = [
   {
-    num: '01', name: 'Issue Analyst', color: '#818cf8',
+    num: '01', name: 'Issue Analyst', color: '#ff6b35',
     desc: 'Parses your GitHub issue and runs semantic RAG search over the entire codebase to understand the full context before any code is touched.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
@@ -13,7 +13,7 @@ const AGENTS = [
     ),
   },
   {
-    num: '02', name: 'Architect', color: '#a78bfa',
+    num: '02', name: 'Architect', color: '#ff8c42',
     desc: 'Maps the implementation to your actual file structure. Creates a concrete step-by-step plan with specific file paths and function signatures.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
@@ -23,7 +23,7 @@ const AGENTS = [
     ),
   },
   {
-    num: '03', name: 'Developer', color: '#c084fc',
+    num: '03', name: 'Developer', color: '#ffab3e',
     desc: 'Writes production-quality code that follows your existing codebase patterns and conventions. No generic boilerplate. Real implementation.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
@@ -32,7 +32,7 @@ const AGENTS = [
     ),
   },
   {
-    num: '04', name: 'QA Engineer', color: '#e879f9',
+    num: '04', name: 'QA Engineer', color: '#ff5c28',
     desc: 'Writes comprehensive pytest tests covering success paths, edge cases, and expected failures. Runs them in an isolated sandbox before the PR is created.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
@@ -41,7 +41,7 @@ const AGENTS = [
     ),
   },
   {
-    num: '05', name: 'Code Critic', color: '#f472b6',
+    num: '05', name: 'Code Critic', color: '#ff4500',
     desc: 'Reviews the generated code for correctness, security, and test coverage. If it finds issues, it rejects and sends the Developer back — up to 5 iterations.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
@@ -51,7 +51,7 @@ const AGENTS = [
     ),
   },
   {
-    num: '06', name: 'PR Writer', color: '#fb7185',
+    num: '06', name: 'PR Writer', color: '#e03500',
     desc: 'Commits the approved code to a new branch, writes a professional pull request description referencing the original issue, and opens it on GitHub.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
@@ -152,10 +152,10 @@ export default function HowItWorks() {
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 7,
           padding: '5px 16px',
-          background: 'rgba(124,58,237,0.07)',
-          border: '1px solid rgba(124,58,237,0.24)',
+          background: 'rgba(255,69,0,0.07)',
+          border: '1px solid rgba(255,69,0,0.22)',
           borderRadius: 100,
-          fontSize: 11.5, color: 'rgba(196,181,253,0.75)', fontWeight: 600,
+          fontSize: 11.5, color: 'rgba(255,140,66,0.8)', fontWeight: 600,
           letterSpacing: '0.08em', textTransform: 'uppercase',
           marginBottom: 22,
         }}>

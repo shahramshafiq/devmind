@@ -17,12 +17,12 @@ import IndexedRepos from './components/IndexedRepos'
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 const AGENTS = [
-  { id: 'analyst',   label: 'Issue Analyst', icon: 'search', color: '#818cf8' },
-  { id: 'architect', label: 'Architect',      icon: 'layout', color: '#a78bfa' },
-  { id: 'developer', label: 'Developer',      icon: 'code',   color: '#c084fc' },
-  { id: 'qa',        label: 'QA Engineer',    icon: 'shield', color: '#e879f9' },
-  { id: 'critic',    label: 'Code Critic',    icon: 'eye',    color: '#f472b6' },
-  { id: 'pr_writer', label: 'PR Writer',      icon: 'pr',     color: '#fb7185' },
+  { id: 'analyst',   label: 'Issue Analyst', icon: 'search', color: '#ff6b35' },
+  { id: 'architect', label: 'Architect',      icon: 'layout', color: '#ff8c42' },
+  { id: 'developer', label: 'Developer',      icon: 'code',   color: '#ffab3e' },
+  { id: 'qa',        label: 'QA Engineer',    icon: 'shield', color: '#ff5c28' },
+  { id: 'critic',    label: 'Code Critic',    icon: 'eye',    color: '#ff4500' },
+  { id: 'pr_writer', label: 'PR Writer',      icon: 'pr',     color: '#e03500' },
 ]
 
 const NODE_TO_IDX = {
@@ -208,7 +208,7 @@ export default function App() {
                   <div style={{
                     position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%, -50%)',
                     width: 700, height: 350, pointerEvents: 'none',
-                    background: 'radial-gradient(ellipse, rgba(124,58,237,0.1), transparent 70%)',
+                    background: 'radial-gradient(ellipse, rgba(255,69,0,0.1), transparent 70%)',
                   }} />
 
                   <motion.div
@@ -222,7 +222,7 @@ export default function App() {
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: 'clamp(28px, 3.5vw, 46px)',
                       fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.12,
-                      color: '#f1f0ff', marginBottom: 14,
+                      color: '#ffffff', marginBottom: 14,
                     }}>
                       Ready to automate your PRs?
                     </h2>
@@ -262,8 +262,8 @@ export default function App() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       {screen === 'running' && (
                         <div style={{ position: 'relative', width: 8, height: 8, flexShrink: 0 }}>
-                          <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#a855f7', animation: 'ripple 1.2s cubic-bezier(0,0,0.2,1) infinite' }} />
-                          <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#a855f7' }} />
+                          <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#ff4500', animation: 'ripple 1.2s cubic-bezier(0,0,0.2,1) infinite' }} />
+                          <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#ff4500' }} />
                         </div>
                       )}
                       {screen === 'done' && (
