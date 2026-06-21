@@ -200,7 +200,7 @@ export default function App() {
             {/* About page */}
             {page === 'about' && (
               <motion.div key="about" {...pageTransition}>
-                <About />
+                <About setPage={setPage} />
                 <Footer />
               </motion.div>
             )}

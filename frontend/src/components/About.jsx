@@ -18,7 +18,7 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 }
 
-export default function About() {
+export default function About({ setPage }) {
   return (
     <div style={{ minHeight: '100vh', padding: '0 0 100px' }}>
 
@@ -325,17 +325,16 @@ export default function About() {
 
             {/* CTA */}
             <div style={{ display: 'flex', gap: 12 }}>
-              <a
-                href="mailto:shahramshafiqgoraya4363@gmail.com"
+              <button
                 className="btn-primary"
-                style={{ textDecoration: 'none' }}
+                onClick={() => setPage('contact')}
               >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                   <rect x="2" y="4" width="20" height="16" rx="2"/>
                   <path d="M2 7l10 7 10-7"/>
                 </svg>
                 Get In Touch
-              </a>
+              </button>
               <a
                 href="https://github.com/shahramshafiq"
                 target="_blank"
