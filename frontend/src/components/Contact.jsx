@@ -39,7 +39,7 @@ const CONTACT_INFO = [
       </svg>
     ),
     label: 'University',
-    value: 'FAST-NUCES, Lahore',
+    value: 'FAST-NUCES, Islamabad',
     href:  null,
   },
 ]
