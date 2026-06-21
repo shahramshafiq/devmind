@@ -21,13 +21,13 @@ function ParticleCanvas() {
     resize()
     window.addEventListener('resize', resize, { passive: true })
 
-    const N = 65
+    const N = 85
     const pts = Array.from({ length: N }, () => ({
       x: Math.random() * cvs.width,
       y: Math.random() * cvs.height,
       z: 0.2 + Math.random() * 0.8,
-      vx: (Math.random() - 0.5) * 0.32,
-      vy: (Math.random() - 0.5) * 0.32,
+      vx: (Math.random() - 0.5) * 1.1,
+      vy: (Math.random() - 0.5) * 1.1,
     }))
 
     let raf
@@ -47,8 +47,8 @@ function ParticleCanvas() {
         if (p.y < -10) p.y = cvs.height + 10
         if (p.y > cvs.height + 10) p.y = -10
         return {
-          x: p.x + (mx - hw) * p.z * 0.016,
-          y: p.y + (my - hh) * p.z * 0.016,
+          x: p.x + (mx - hw) * p.z * 0.028,
+          y: p.y + (my - hh) * p.z * 0.028,
           z: p.z,
         }
       })
@@ -59,8 +59,8 @@ function ParticleCanvas() {
           const dx = disp[i].x - disp[j].x
           const dy = disp[i].y - disp[j].y
           const d = Math.sqrt(dx * dx + dy * dy)
-          if (d < 160) {
-            const a = (1 - d / 160) * 0.13 * ((disp[i].z + disp[j].z) / 2)
+          if (d < 180) {
+            const a = (1 - d / 180) * 0.22 * ((disp[i].z + disp[j].z) / 2)
             ctx.beginPath()
             ctx.moveTo(disp[i].x, disp[i].y)
             ctx.lineTo(disp[j].x, disp[j].y)
@@ -72,8 +72,8 @@ function ParticleCanvas() {
 
       disp.forEach(p => {
         ctx.beginPath()
-        ctx.arc(p.x, p.y, 0.7 + p.z * 2.2, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(255,${Math.round(55 + p.z * 65)},0,${0.15 + p.z * 0.5})`
+        ctx.arc(p.x, p.y, 1.0 + p.z * 2.8, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(255,${Math.round(55 + p.z * 65)},0,${0.3 + p.z * 0.6})`
         ctx.fill()
       })
 
@@ -89,15 +89,15 @@ function ParticleCanvas() {
   }, [])
 
   return (
-    <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.7 }} />
+    <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 1 }} />
   )
 }
 
 const RINGS = [
-  { size: 220, top: '12%', left: '4%',  dur: 18, del: 0 },
-  { size: 140, top: '55%', right: '5%', dur: 23, del: -7 },
-  { size: 100, top: '30%', right: '18%',dur: 16, del: -3 },
-  { size: 70,  top: '70%', left: '20%', dur: 21, del: -11 },
+  { size: 220, top: '12%', left: '4%',  dur: 8,  del: 0 },
+  { size: 140, top: '55%', right: '5%', dur: 10, del: -3 },
+  { size: 100, top: '30%', right: '18%',dur: 7,  del: -1 },
+  { size: 70,  top: '70%', left: '20%', dur: 9,  del: -5 },
 ]
 
 export default function Background() {
@@ -135,7 +135,7 @@ export default function Background() {
           backgroundSize: '90px 90px',
           transform: 'rotateX(72deg)',
           transformOrigin: '50% 0%',
-          animation: 'grid-scroll 7s linear infinite',
+          animation: 'grid-scroll 3.5s linear infinite',
         }} />
       </div>
 
@@ -185,21 +185,21 @@ export default function Background() {
         width: 520, height: 520, borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(255,55,0,0.09) 0%, transparent 68%)',
         filter: 'blur(48px)',
-        animation: 'orb-float 18s ease-in-out infinite',
+        animation: 'orb-float 8s ease-in-out infinite',
       }} />
       <div style={{
         position: 'absolute', bottom: '28%', left: '8%',
         width: 420, height: 420, borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(255,120,0,0.07) 0%, transparent 68%)',
         filter: 'blur(56px)',
-        animation: 'orb-float 24s ease-in-out infinite reverse',
+        animation: 'orb-float 11s ease-in-out infinite reverse',
       }} />
       <div style={{
         position: 'absolute', top: '60%', right: '40%',
         width: 300, height: 300, borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(200,40,0,0.05) 0%, transparent 65%)',
         filter: 'blur(40px)',
-        animation: 'orb-float 30s ease-in-out infinite 4s',
+        animation: 'orb-float 13s ease-in-out infinite 2s',
       }} />
 
     </div>
