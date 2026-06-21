@@ -154,7 +154,7 @@ export default function Contact() {
                 fontSize: 26, fontWeight: 800, color: '#ffffff',
                 marginBottom: 6, lineHeight: 1.1,
               }}>
-                Shahram<br />Shafiq Goraya
+                Shahram<br />Shafiq
               </div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', fontWeight: 500, marginBottom: 16 }}>
                 BSCS Student · AI Engineer

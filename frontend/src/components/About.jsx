@@ -101,7 +101,7 @@ export default function About({ setPage }) {
             }}>
               <img
                 src="/img.png"
-                alt="Shahram Shafiq Goraya"
+                alt="Shahram Shafiq"
                 style={{
                   width: '100%', height: '100%',
                   objectFit: 'cover',
@@ -124,7 +124,7 @@ export default function About({ setPage }) {
                   fontSize: 22, fontWeight: 800, color: '#ffffff',
                   letterSpacing: '-0.02em', marginBottom: 4,
                 }}>
-                  Shahram Shafiq Goraya
+                  Shahram Shafiq
                 </div>
                 <div style={{
                   fontSize: 13, color: '#ff6b35', fontWeight: 600,
@@ -272,7 +272,7 @@ export default function About({ setPage }) {
                 color: 'rgba(255,255,255,0.6)',
                 marginBottom: 20,
               }}>
-                I'm <strong style={{ color: '#ffffff', fontWeight: 600 }}>Shahram Shafiq Goraya</strong>, a 4th-semester BSCS student at{' '}
+                I'm <strong style={{ color: '#ffffff', fontWeight: 600 }}>Shahram Shafiq</strong>, a 4th-semester BSCS student at{' '}
                 <strong style={{ color: '#ff6b35', fontWeight: 600 }}>FAST-NUCES</strong>, building production AI systems between classes.
               </p>
               <p style={{

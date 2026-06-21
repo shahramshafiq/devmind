@@ -146,5 +146,5 @@ DevMind/
 
 ## Built by
 
-Shahram Shafiq Goraya, BSCS, FAST-NUCES Islamabad  
+Shahram Shafiq, BSCS, FAST-NUCES Islamabad  
 [github.com/shahramshafiq](https://github.com/shahramshafiq)
