@@ -1,6 +1,6 @@
 # DevMind
 
-**Autonomous AI code engineer.** Paste a GitHub issue URL — DevMind's 6-agent pipeline analyzes your codebase, writes production code, runs tests, and opens a real pull request. No human in the loop.
+**Autonomous AI code engineer.** Paste a GitHub issue URL and DevMind's 6-agent pipeline analyzes your codebase, writes production code, runs tests, and opens a real pull request. No human in the loop.
 
 **Live demo:** https://devmind-theta.vercel.app
 
@@ -12,23 +12,23 @@
 GitHub Issue URL
        |
        v
- [1] Issue Analyst      — Fetches the issue, runs RAG search over the full codebase
+ [1] Issue Analyst      - Fetches the issue, runs RAG search over the full codebase
        |
        v
- [2] Architect          — Plans the implementation with specific file paths and function signatures
+ [2] Architect          - Plans the implementation with specific file paths and function signatures
        |
        v
- [3] Developer          — Writes production code that matches your codebase's patterns
+ [3] Developer          - Writes production code that matches your codebase's patterns
        |
        v
- [4] QA Engineer        — Writes pytest tests, runs them in an isolated sandbox
+ [4] QA Engineer        - Writes pytest tests, runs them in an isolated sandbox
        |
        v
- [5] Code Critic        — Reviews code quality, security, and test coverage
+ [5] Code Critic        - Reviews code quality, security, and test coverage
        |                   Rejects and loops back to Developer (up to 5 iterations)
        |
        v
- [6] PR Writer          — Commits code to a new branch, opens a real GitHub PR
+ [6] PR Writer          - Commits code to a new branch, opens a real GitHub PR
 ```
 
 ---
@@ -53,8 +53,8 @@ GitHub Issue URL
 ## Features
 
 - Works with any public GitHub repository in any language
-- Streaming UI — watch each agent complete in real time
-- Self-correcting critic loop — the Code Critic can reject and send the Developer back up to 5 times
+- Streaming UI: watch each agent complete in real time
+- Self-correcting critic loop: the Code Critic can reject and send the Developer back up to 5 times
 - ChromaDB caches indexed repos so repeat runs are significantly faster
 - Full run history stored locally with PR links, test results, and iteration counts
 
@@ -146,5 +146,5 @@ DevMind/
 
 ## Built by
 
-Shahram Shafiq Goraya — BSCS, FAST-NUCES Islamabad  
+Shahram Shafiq Goraya, BSCS, FAST-NUCES Islamabad  
 [github.com/shahramshafiq](https://github.com/shahramshafiq)
