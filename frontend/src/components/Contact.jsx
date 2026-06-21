@@ -52,32 +52,41 @@ export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' })
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
+  const [error, setError] = useState(false)
 
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }))
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (!form.name || !form.email || !form.message) return
 
     setSending(true)
-    const body = [
-      `Name: ${form.name}`,
-      `Email: ${form.email}`,
-      form.phone ? `Phone: ${form.phone}` : null,
-      form.subject ? `Subject: ${form.subject}` : null,
-      '',
-      `Message:\n${form.message}`,
-    ].filter(Boolean).join('\n')
-
-    const subject = form.subject || `Message from ${form.name} via DevMind`
-    const mailtoLink = `mailto:shahramshafiqgoraya4363@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-
-    setTimeout(() => {
-      window.location.href = mailtoLink
+    setError(false)
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: '7dd97918-3e2c-4347-b891-c35e84023057',
+          name: form.name,
+          email: form.email,
+          phone: form.phone || '',
+          subject: form.subject || `Message from ${form.name} via DevMind`,
+          message: form.message,
+        }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setSent(true)
+        setForm({ name: '', email: '', phone: '', subject: '', message: '' })
+      } else {
+        setError(true)
+      }
+    } catch {
+      setError(true)
+    } finally {
       setSending(false)
-      setSent(true)
-      setForm({ name: '', email: '', phone: '', subject: '', message: '' })
-    }, 600)
+    }
   }
 
   return (
@@ -215,12 +224,13 @@ export default function Contact() {
                 Send a Message
               </div>
               <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)', marginBottom: 32 }}>
-                Fill in the details below and your mail client will open pre-filled.
+                Fill in the details below and I'll receive your message directly.
               </p>
 
               <AnimatePresence>
                 {sent && (
                   <motion.div
+                    key="success"
                     initial={{ opacity: 0, y: -10, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0 }}
@@ -242,7 +252,35 @@ export default function Contact() {
                       </svg>
                     </div>
                     <span style={{ fontSize: 14, color: '#4ade80', fontWeight: 500 }}>
-                      Mail client opened with your message filled in!
+                      Message sent! I'll get back to you soon.
+                    </span>
+                  </motion.div>
+                )}
+                {error && (
+                  <motion.div
+                    key="error"
+                    initial={{ opacity: 0, y: -10, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                    style={{
+                      padding: '16px 20px', borderRadius: 12, marginBottom: 24,
+                      background: 'rgba(255,69,0,0.06)',
+                      border: '1px solid rgba(255,69,0,0.2)',
+                      display: 'flex', alignItems: 'center', gap: 12,
+                    }}
+                  >
+                    <div style={{
+                      width: 28, height: 28, borderRadius: '50%',
+                      background: 'rgba(255,69,0,0.1)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff4500" strokeWidth="3">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                      </svg>
+                    </div>
+                    <span style={{ fontSize: 14, color: '#ff6b35', fontWeight: 500 }}>
+                      Something went wrong. Try emailing directly at shahramshafiqgoraya4363@gmail.com
                     </span>
                   </motion.div>
                 )}
@@ -325,7 +363,7 @@ export default function Contact() {
                   }}
                 >
                   {sending ? (
-                    <>Opening Mail Client...</>
+                    <>Sending...</>
                   ) : (
                     <>
                       Send Message
