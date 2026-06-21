@@ -8,6 +8,7 @@ import LogTimeline from './components/LogTimeline'
 import ResultPanel from './components/ResultPanel'
 import TestResultPanel from './components/TestResultPanel'
 import History from './components/History'
+import IndexedRepos from './components/IndexedRepos'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -163,6 +164,7 @@ export default function App() {
           <div style={{ animation: 'fade-in 0.5s ease-out' }}>
             <Hero />
             <InputPanel issueUrl={issueUrl} setIssueUrl={setIssueUrl} onRun={handleRun} />
+            <IndexedRepos />
           </div>
         )}
 

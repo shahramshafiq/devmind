@@ -55,6 +55,24 @@ export default function ResultPanel({ result }) {
           </svg>
         </a>
 
+        {/* Repo index badge */}
+        {result.repo_freshly_indexed != null && (
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            padding: '4px 11px', borderRadius: 20, fontSize: 11, fontWeight: 600,
+            marginBottom: 14,
+            background: result.repo_freshly_indexed ? 'rgba(251,191,36,0.1)' : 'rgba(99,102,241,0.1)',
+            border: `1px solid ${result.repo_freshly_indexed ? 'rgba(251,191,36,0.25)' : 'rgba(99,102,241,0.25)'}`,
+            color: result.repo_freshly_indexed ? '#fbbf24' : '#818cf8',
+          }}>
+            {result.repo_freshly_indexed ? (
+              <><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> New repo indexed — future runs will be faster</>
+            ) : (
+              <><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Using cached repo index</>
+            )}
+          </div>
+        )}
+
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
           {[
