@@ -1,72 +1,139 @@
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+
+function NavBtn({ children, active, onClick }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        padding: '6px 14px', borderRadius: 8,
+        fontSize: 13, fontWeight: 500,
+        border: 'none', cursor: 'pointer',
+        transition: 'all 0.15s ease',
+        background: active ? 'rgba(124,58,237,0.15)' : hovered ? 'rgba(255,255,255,0.05)' : 'transparent',
+        color: active ? '#c4b5fd' : hovered ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.4)',
+      }}
+    >
+      {children}
+    </button>
+  )
+}
+
 export default function Header({ backendOk, page, setPage }) {
-  const statusColor  = backendOk === null ? 'rgba(255,255,255,0.25)' : backendOk ? '#4ade80' : '#f87171'
-  const statusBg     = backendOk === null ? 'rgba(255,255,255,0.04)' : backendOk ? 'rgba(74,222,128,0.08)' : 'rgba(248,113,113,0.08)'
-  const statusBorder = backendOk === null ? 'rgba(255,255,255,0.07)'  : backendOk ? 'rgba(74,222,128,0.2)'  : 'rgba(248,113,113,0.2)'
-  const statusLabel  = backendOk === null ? 'Connecting…' : backendOk ? 'Backend Online' : 'Backend Offline'
+  const [scrolled, setScrolled] = useState(false)
+  const [tryHovered, setTryHovered] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 18)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  const goHome = () => {
+    setPage('home')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const scrollTo = id => {
+    setPage('home')
+    setTimeout(() => {
+      const el = document.getElementById(id)
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 50)
+  }
+
+  const statusColor = backendOk === null ? 'rgba(255,255,255,0.25)' : backendOk ? '#4ade80' : '#f87171'
+  const statusBg    = backendOk ? 'rgba(74,222,128,0.07)' : 'rgba(255,255,255,0.04)'
+  const statusBdr   = backendOk ? 'rgba(74,222,128,0.18)' : 'rgba(255,255,255,0.07)'
+  const statusLabel = backendOk === null ? 'Connecting' : backendOk ? 'Online' : 'Offline'
 
   return (
-    <header style={{
-      position: 'relative', zIndex: 20,
-      padding: '18px 32px',
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      borderBottom: '1px solid rgba(255,255,255,0.05)',
-    }}>
+    <motion.header
+      initial={{ y: -24, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+      style={{
+        position: 'sticky', top: 0, left: 0, right: 0, zIndex: 100,
+        padding: '0 32px',
+        height: 62,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        background: scrolled ? 'rgba(5,5,8,0.88)' : 'rgba(5,5,8,0.5)',
+        backdropFilter: 'blur(22px) saturate(160%)',
+        WebkitBackdropFilter: 'blur(22px) saturate(160%)',
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent',
+        transition: 'background 0.3s, border-color 0.3s',
+      }}
+    >
       {/* Logo */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
+      <div
+        style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', userSelect: 'none' }}
+        onClick={goHome}
+      >
         <div style={{
-          width: 36, height: 36, borderRadius: 10,
-          background: 'linear-gradient(135deg, #7c3aed, #e879f9)',
+          width: 33, height: 33, borderRadius: 9,
+          background: 'linear-gradient(135deg, #7c3aed 0%, #e879f9 100%)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 0 22px rgba(124,58,237,0.5)',
+          boxShadow: '0 0 18px rgba(124,58,237,0.42)',
           flexShrink: 0,
         }}>
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
           </svg>
         </div>
         <div>
-          <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.035em', color: '#f1f0ff', lineHeight: 1 }}>
+          <div style={{ fontSize: 16, fontWeight: 800, letterSpacing: '-0.04em', color: '#f1f0ff', lineHeight: 1 }}>
             Dev<span className="text-gradient">Mind</span>
           </div>
-          <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.08em', marginTop: 2, fontWeight: 500 }}>
+          <div style={{ fontSize: 9.5, color: 'rgba(255,255,255,0.18)', letterSpacing: '0.1em', marginTop: 2, fontWeight: 600 }}>
             AI CODE ENGINEER
           </div>
         </div>
       </div>
 
       {/* Nav */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-        {['home', 'history'].map(p => (
-          <button key={p} onClick={() => setPage(p)} style={{
-            padding: '6px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600,
-            border: 'none', cursor: 'pointer', transition: 'all 0.18s',
-            background: page === p ? 'rgba(139,92,246,0.18)' : 'transparent',
-            color: page === p ? '#c084fc' : 'rgba(255,255,255,0.35)',
-            textTransform: 'capitalize',
-          }}>
-            {p === 'home' ? 'Home' : 'History'}
-          </button>
-        ))}
-      </div>
+      <nav style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <NavBtn active={page === 'home'} onClick={goHome}>Home</NavBtn>
+        <NavBtn active={false} onClick={() => scrollTo('how-it-works')}>How it works</NavBtn>
+        <NavBtn active={false} onClick={() => scrollTo('features')}>Features</NavBtn>
+        <NavBtn active={page === 'history'} onClick={() => setPage('history')}>History</NavBtn>
+      </nav>
 
-      {/* Right */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.18)', fontFamily: "'JetBrains Mono', monospace" }}>
-          v0.1.0
-        </span>
+      {/* Right side */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{
-          display: 'flex', alignItems: 'center', gap: 7,
-          padding: '5px 13px',
+          display: 'flex', alignItems: 'center', gap: 6,
+          padding: '4px 12px',
           background: statusBg,
-          border: `1px solid ${statusBorder}`,
+          border: `1px solid ${statusBdr}`,
           borderRadius: 20,
           fontSize: 12, fontWeight: 500, color: statusColor,
           transition: 'all 0.35s',
         }}>
-          <div style={{ width: 6, height: 6, borderRadius: '50%', background: statusColor, transition: 'background 0.35s' }} />
+          <div style={{ width: 6, height: 6, borderRadius: '50%', background: statusColor }} />
           {statusLabel}
         </div>
+
+        <button
+          onClick={() => scrollTo('try-it')}
+          onMouseEnter={() => setTryHovered(true)}
+          onMouseLeave={() => setTryHovered(false)}
+          style={{
+            padding: '7px 18px',
+            background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)',
+            border: 'none', borderRadius: 9,
+            color: 'white', fontSize: 13, fontWeight: 600,
+            cursor: 'pointer',
+            boxShadow: tryHovered ? '0 0 28px rgba(124,58,237,0.65)' : '0 0 16px rgba(124,58,237,0.35)',
+            transform: tryHovered ? 'translateY(-1px)' : 'translateY(0)',
+            transition: 'box-shadow 0.2s, transform 0.15s',
+          }}
+        >
+          Try it free
+        </button>
       </div>
-    </header>
+    </motion.header>
   )
 }
