@@ -58,6 +58,17 @@ def history():
     return {"runs": get_history()}
 
 
+@app.get("/api/indexed-repos")
+def indexed_repos():
+    from rag.indexer import get_chroma
+    try:
+        client = get_chroma()
+        collections = client.list_collections()
+        return {"repos": [c.name for c in collections]}
+    except Exception:
+        return {"repos": []}
+
+
 @app.post("/api/test-llm")
 def test_llm(body: TestRequest):
     from llm.client import get_llm
