@@ -204,11 +204,11 @@ export default function App() {
 
                 {/* CTA / Try It section */}
                 <section id="try-it" style={{ padding: '80px 24px 100px', position: 'relative' }}>
-                  {/* Soft radial glow behind the input */}
+                  {/* Subtle glow behind input */}
                   <div style={{
                     position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%, -50%)',
                     width: 700, height: 350, pointerEvents: 'none',
-                    background: 'radial-gradient(ellipse, rgba(255,69,0,0.1), transparent 70%)',
+                    background: 'radial-gradient(ellipse, rgba(255,69,0,0.07), transparent 70%)',
                   }} />
 
                   <motion.div
@@ -218,15 +218,16 @@ export default function App() {
                     viewport={{ once: true }}
                     style={{ textAlign: 'center', marginBottom: 36 }}
                   >
+                    <div className="section-label" style={{ justifyContent: 'center', marginBottom: 20 }}>Try It Free</div>
                     <h2 style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 'clamp(28px, 3.5vw, 46px)',
-                      fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.12,
-                      color: '#ffffff', marginBottom: 14,
+                      fontFamily: "'Syne', sans-serif",
+                      fontSize: 'clamp(32px, 4vw, 56px)',
+                      fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.05,
+                      color: '#ffffff', marginBottom: 16,
                     }}>
-                      Ready to automate your PRs?
+                      Ready to Automate<br />Your PRs?
                     </h2>
-                    <p style={{ fontSize: 16, color: 'rgba(241,240,255,0.42)', lineHeight: 1.7 }}>
+                    <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>
                       Drop a GitHub issue link and watch DevMind build the fix.
                     </p>
                   </motion.div>
