@@ -13,21 +13,16 @@ import IndexedRepos from './components/IndexedRepos'
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 const AGENTS = [
-  { id: 'analyst',   label: 'Issue Analyst', icon: 'search', color: '#818cf8', startAt: 2   },
-  { id: 'architect', label: 'Architect',      icon: 'layout', color: '#a78bfa', startAt: 20  },
-  { id: 'developer', label: 'Developer',      icon: 'code',   color: '#c084fc', startAt: 40  },
-  { id: 'qa',        label: 'QA Engineer',    icon: 'shield', color: '#e879f9', startAt: 75  },
-  { id: 'critic',    label: 'Code Critic',    icon: 'eye',    color: '#f472b6', startAt: 100 },
-  { id: 'pr_writer', label: 'PR Writer',      icon: 'pr',     color: '#fb7185', startAt: 120 },
+  { id: 'analyst',   label: 'Issue Analyst', icon: 'search', color: '#818cf8' },
+  { id: 'architect', label: 'Architect',      icon: 'layout', color: '#a78bfa' },
+  { id: 'developer', label: 'Developer',      icon: 'code',   color: '#c084fc' },
+  { id: 'qa',        label: 'QA Engineer',    icon: 'shield', color: '#e879f9' },
+  { id: 'critic',    label: 'Code Critic',    icon: 'eye',    color: '#f472b6' },
+  { id: 'pr_writer', label: 'PR Writer',      icon: 'pr',     color: '#fb7185' },
 ]
 
-const FAKE_LOGS = {
-  analyst:   ['Parsing GitHub issue URL...', 'Querying RAG codebase for context...', 'Analyzing issue title and description...', 'Cross-referencing affected components...'],
-  architect: ['Reading analyst output...', 'Mapping implementation to file structure...', 'Identifying dependencies and touch points...', 'Writing step-by-step implementation plan...'],
-  developer: ['Loading architecture plan and code context...', 'Writing code changes for affected files...', 'Applying logic to existing codebase patterns...', 'Code generation complete.'],
-  qa:        ['Reviewing generated code changes...', 'Writing pytest unit tests...', 'Adding edge cases and boundary conditions...', 'Test suite finalized.'],
-  critic:    ['Running code review pass...', 'Checking implementation correctness...', 'Evaluating test coverage quality...', 'Rendering decision...'],
-  pr_writer: ['Summarizing all agent outputs...', 'Writing PR title and description...', 'Formatting markdown for GitHub...', 'Pull request content ready.'],
+const NODE_TO_IDX = {
+  analyst: 0, architect: 1, developer: 2, qa: 3, critic: 4, pr_writer: 5
 }
 
 function parseSlug(url) {
@@ -47,7 +42,6 @@ export default function App() {
   const [elapsed, setElapsed] = useState(0)
   const [backendOk, setBackendOk] = useState(null)
 
-  const timers  = useRef([])
   const ticker  = useRef(null)
   const runUrl  = useRef('')
 
@@ -58,36 +52,16 @@ export default function App() {
       .catch(() => setBackendOk(false))
   }, [])
 
-  const clearAll = () => {
-    timers.current.forEach(clearTimeout)
-    timers.current = []
+  const stopTicker = () => {
     if (ticker.current) { clearInterval(ticker.current); ticker.current = null }
   }
 
-  const addLog = (agent, msg) =>
-    setLogs(prev => [...prev, { agent, msg, ts: Date.now() }])
+  const clearAll = () => stopTicker()
 
-  const startSim = () => {
+  const startTicker = () => {
     const t0 = Date.now()
     ticker.current = setInterval(() =>
       setElapsed(Math.floor((Date.now() - t0) / 1000)), 1000)
-
-    AGENTS.forEach((ag, i) => {
-      const t = setTimeout(() => {
-        setActiveIdx(i)
-        setStatuses(prev => {
-          const s = [...prev]
-          if (i > 0) s[i - 1] = 'done'
-          s[i] = 'active'
-          return s
-        })
-        ;(FAKE_LOGS[ag.id] || []).forEach((msg, j) => {
-          const sub = setTimeout(() => addLog(ag.label, msg), j * 3600)
-          timers.current.push(sub)
-        })
-      }, ag.startAt * 1000)
-      timers.current.push(t)
-    })
   }
 
   const handleRun = async () => {
@@ -96,40 +70,86 @@ export default function App() {
     runUrl.current = url
 
     setScreen('running')
-    setStatuses(Array(6).fill('waiting'))
-    setActiveIdx(-1)
+    const initStatuses = Array(6).fill('waiting')
+    initStatuses[0] = 'active'
+    setStatuses(initStatuses)
+    setActiveIdx(0)
     setLogs([])
     setElapsed(0)
     setResult(null)
     setErrMsg('')
-    clearAll()
-    startSim()
+    stopTicker()
+    startTicker()
 
     try {
-      const res  = await fetch(`${API}/api/run-from-issue`, {
+      const res = await fetch(`${API}/api/run-stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ issue_url: url }),
       })
-      const data = await res.json()
-      clearAll()
 
-      if (!res.ok || data.error) {
+      if (!res.ok) {
+        const data = await res.json()
+        stopTicker()
         setErrMsg(data.error || data.detail || 'Something went wrong.')
         setScreen('error')
         return
       }
 
-      setStatuses(Array(6).fill('done'))
-      setActiveIdx(-1)
-      if (data.logs?.length) {
-        setLogs(data.logs.map((msg, i) => ({ agent: 'DevMind', msg, ts: i })))
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop()
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          let event
+          try { event = JSON.parse(line.slice(6)) } catch { continue }
+
+          if (event.type === 'agent_done') {
+            const idx = NODE_TO_IDX[event.agent]
+            if (idx !== undefined) {
+              setStatuses(prev => {
+                const s = [...prev]
+                s[idx] = 'done'
+                if (event.agent === 'critic' && event.decision === 'REJECT') {
+                  s[2] = 'active'
+                } else if (idx + 1 < 6) {
+                  s[idx + 1] = 'active'
+                }
+                return s
+              })
+              const nextIdx = (event.agent === 'critic' && event.decision === 'REJECT')
+                ? 2 : (idx + 1 < 6 ? idx + 1 : -1)
+              setActiveIdx(nextIdx)
+              if (event.logs?.length) {
+                const label = AGENTS[idx].label
+                setLogs(prev => [...prev, ...event.logs.map(msg => ({ agent: label, msg, ts: Date.now() }))])
+              }
+            }
+          } else if (event.type === 'error') {
+            stopTicker()
+            setErrMsg(event.message)
+            setScreen('error')
+            return
+          } else if (event.type === 'result') {
+            stopTicker()
+            setStatuses(Array(6).fill('done'))
+            setActiveIdx(-1)
+            setResult(event)
+            setScreen('done')
+          }
+        }
       }
-      setResult(data)
-      setScreen('done')
     } catch (err) {
-      clearAll()
-      setErrMsg(err.message || 'Could not reach backend at localhost:8000.')
+      stopTicker()
+      setErrMsg(err.message || 'Could not reach backend.')
       setScreen('error')
     }
   }
@@ -146,7 +166,7 @@ export default function App() {
     setElapsed(0)
   }
 
-  useEffect(() => () => clearAll(), [])
+  useEffect(() => () => stopTicker(), [])
 
   const slug = parseSlug(runUrl.current)
   const mm   = String(Math.floor(elapsed / 60)).padStart(2, '0')
