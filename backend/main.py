@@ -85,23 +85,43 @@ def run_from_issue(body: RunFromIssueRequest):
     from github_client.client import parse_issue_url, fetch_issue, create_pr
     from rag.indexer import index_repo, get_chroma
     from graph.pipeline import pipeline
+    from github import GithubException
 
-    owner, repo_name, issue_number = parse_issue_url(body.issue_url)
+    try:
+        owner, repo_name, issue_number = parse_issue_url(body.issue_url)
+    except ValueError:
+        return {"error": "That doesn't look like a valid GitHub issue URL. Expected format: https://github.com/owner/repo/issues/42"}
+
     repo_full_name = f"{owner}/{repo_name}"
     repo_url = f"https://github.com/{repo_full_name}"
     collection_name = repo_name.replace('-', '_').replace('.', '_')
 
-    issue = fetch_issue(repo_full_name, issue_number)
+    try:
+        issue = fetch_issue(repo_full_name, issue_number)
+    except GithubException as e:
+        if e.status == 404:
+            return {"error": f"Issue #{issue_number} or repository '{repo_full_name}' was not found. Make sure the repo is public and the issue exists."}
+        if e.status == 401:
+            return {"error": "GitHub authentication failed. Check the GITHUB_TOKEN environment variable."}
+        return {"error": f"GitHub error ({e.status}): {e.data.get('message', 'unknown error')}"}
+    except Exception as e:
+        return {"error": f"Could not fetch issue: {str(e)}"}
+
     if issue["state"] != "open":
-        return {"error": f"Issue #{issue_number} is already {issue['state']}."}
+        return {"error": f"Issue #{issue_number} is already {issue['state']}. DevMind only works on open issues."}
 
     chroma = get_chroma()
     try:
         chroma.get_collection(collection_name)
         repo_indexed = False
     except Exception:
-        index_repo(repo_url, repo_name)
-        repo_indexed = True
+        try:
+            index_repo(repo_url, repo_name)
+            repo_indexed = True
+        except GithubException as e:
+            if e.status == 404:
+                return {"error": f"Repository '{repo_full_name}' was not found or is private. DevMind requires a public repository."}
+            return {"error": f"Failed to index repository: {e.data.get('message', str(e))}"}
 
     initial_state = {
         "repo_url": repo_url,
