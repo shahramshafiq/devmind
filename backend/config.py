@@ -11,4 +11,4 @@ LLM_TEMPERATURE = 0.1
 
 CHROMADB_PATH = "./chromadb_store"
 REPOS_PATH = "./repos"
-DATABASE_URL = "sqlite:///./devmind.db"
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./devmind.db")
