@@ -23,7 +23,10 @@ class RunRecord(Base):
     created_at     = Column(DateTime, default=datetime.datetime.utcnow)
 
 
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+# Railway injects postgres:// but SQLAlchemy 2.x requires postgresql://
+_db_url = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+_kwargs = {"connect_args": {"check_same_thread": False}} if _db_url.startswith("sqlite") else {}
+engine = create_engine(_db_url, **_kwargs)
 SessionLocal = sessionmaker(bind=engine)
 
 
