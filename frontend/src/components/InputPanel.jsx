@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 const GithubIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="rgba(255,255,255,0.28)" style={{ flexShrink: 0 }}>
@@ -8,10 +9,12 @@ const GithubIcon = () => (
 
 export default function InputPanel({ issueUrl, setIssueUrl, onRun }) {
   const [focused, setFocused] = useState(false)
+  const vw = useWindowWidth()
+  const isMob = vw < 480
   const valid = issueUrl.includes('github.com') && issueUrl.includes('/issues/')
 
   return (
-    <section className="su6" style={{ maxWidth: 680, margin: '0 auto', padding: '0 24px 80px' }}>
+    <section className="su6" style={{ maxWidth: 680, margin: '0 auto', padding: isMob ? '0 0 60px' : '0 24px 80px' }}>
 
       <div style={{
         background: '#111111',
@@ -30,33 +33,58 @@ export default function InputPanel({ issueUrl, setIssueUrl, onRun }) {
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             onKeyDown={e => e.key === 'Enter' && valid && onRun()}
-            placeholder="https://github.com/owner/repo/issues/42"
+            placeholder={isMob ? 'github.com/.../issues/42' : 'https://github.com/owner/repo/issues/42'}
             style={{
               flex: 1, background: 'transparent', border: 'none', outline: 'none',
               color: '#ffffff', fontSize: 15,
               fontFamily: "'JetBrains Mono', monospace",
               caretColor: '#ff4500',
+              minWidth: 0,
             }}
           />
 
-          <button
-            onClick={onRun}
-            disabled={!valid}
-            className={valid ? 'glow-btn' : ''}
-            style={{
-              padding: '11px 22px', border: 'none', borderRadius: 11,
-              color: valid ? 'white' : 'rgba(255,255,255,0.22)',
-              fontSize: 14, fontWeight: 700,
-              cursor: valid ? 'pointer' : 'not-allowed',
-              background: valid ? undefined : 'rgba(255,255,255,0.04)',
-              whiteSpace: 'nowrap', letterSpacing: '0.01em',
-              transition: 'all 0.2s',
-              fontFamily: 'Inter, sans-serif',
-            }}
-          >
-            Run DevMind
-          </button>
+          {!isMob && (
+            <button
+              onClick={onRun}
+              disabled={!valid}
+              className={valid ? 'glow-btn' : ''}
+              style={{
+                padding: '11px 22px', border: 'none', borderRadius: 11,
+                color: valid ? 'white' : 'rgba(255,255,255,0.22)',
+                fontSize: 14, fontWeight: 700,
+                cursor: valid ? 'pointer' : 'not-allowed',
+                background: valid ? undefined : 'rgba(255,255,255,0.04)',
+                whiteSpace: 'nowrap', letterSpacing: '0.01em',
+                transition: 'all 0.2s',
+                fontFamily: 'Inter, sans-serif',
+              }}
+            >
+              Run DevMind
+            </button>
+          )}
         </div>
+
+        {isMob && (
+          <div style={{ padding: '0 6px 6px' }}>
+            <button
+              onClick={onRun}
+              disabled={!valid}
+              className={valid ? 'glow-btn' : ''}
+              style={{
+                width: '100%', padding: '13px', border: 'none', borderRadius: 12,
+                color: valid ? 'white' : 'rgba(255,255,255,0.22)',
+                fontSize: 14, fontWeight: 700,
+                cursor: valid ? 'pointer' : 'not-allowed',
+                background: valid ? undefined : 'rgba(255,255,255,0.04)',
+                letterSpacing: '0.01em',
+                transition: 'all 0.2s',
+                fontFamily: 'Inter, sans-serif',
+              }}
+            >
+              Run DevMind
+            </button>
+          </div>
+        )}
       </div>
 
       <p style={{ textAlign: 'center', marginTop: 14, fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>

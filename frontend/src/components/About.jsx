@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 const SKILLS = [
   'Agentic AI', 'LangGraph', 'Python', 'FastAPI',
@@ -19,13 +20,17 @@ const fadeUp = {
 }
 
 export default function About({ setPage }) {
+  const vw = useWindowWidth()
+  const isMob = vw < 640
+  const isTab = vw < 1024
+
   return (
     <div style={{ minHeight: '100vh', padding: '0 0 100px' }}>
 
       {/* ── Hero banner ── */}
       <section style={{
         position: 'relative',
-        padding: '100px 48px 80px',
+        padding: isMob ? '72px 20px 60px' : isTab ? '100px 32px 72px' : '100px 48px 80px',
         maxWidth: 1200, margin: '0 auto',
         overflow: 'hidden',
       }}>
@@ -73,8 +78,8 @@ export default function About({ setPage }) {
       </section>
 
       {/* ── Main content ── */}
-      <section style={{ maxWidth: 1200, margin: '0 auto', padding: '0 48px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: 32, alignItems: 'start' }}>
+      <section style={{ maxWidth: 1200, margin: '0 auto', padding: isMob ? '0 20px' : isTab ? '0 32px' : '0 48px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMob ? '1fr' : '1fr 1.5fr', gap: 32, alignItems: 'start' }}>
 
           {/* Left — photo + contact card */}
           <motion.div
@@ -216,7 +221,7 @@ export default function About({ setPage }) {
             style={{ paddingTop: 8 }}
           >
             {/* Stats row */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 32 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMob ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 10, marginBottom: 32 }}>
               {STATS.map((s, i) => (
                 <motion.div
                   key={s.label}

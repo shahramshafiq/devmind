@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 const FEATURES = [
   {
@@ -181,13 +182,18 @@ function FeatureCard({ f, index }) {
 }
 
 export default function Features() {
+  const vw = useWindowWidth()
+  const isMob = vw < 640
+  const isTab = vw < 1024
+  const cols = isMob ? '1fr' : isTab ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'
+
   return (
-    <section id="features" style={{ padding: '0 48px 120px', maxWidth: 1200, margin: '0 auto' }}>
+    <section id="features" style={{ padding: isMob ? '0 20px 80px' : isTab ? '0 32px 100px' : '0 48px 120px', maxWidth: 1200, margin: '0 auto' }}>
 
       {/* Header */}
-      <div style={{ marginBottom: 64 }}>
+      <div style={{ marginBottom: isMob ? 40 : 64 }}>
         <div className="section-label">Features</div>
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24 }}>
+        <div style={{ display: 'flex', flexDirection: isMob ? 'column' : 'row', alignItems: isMob ? 'flex-start' : 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24 }}>
           <h2 style={{
             fontFamily: "'Syne', sans-serif",
             fontSize: 'clamp(34px, 4.5vw, 58px)',
@@ -206,7 +212,7 @@ export default function Features() {
       </div>
 
       {/* Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: cols, gap: 14 }}>
         {FEATURES.map((f, i) => <FeatureCard key={f.title} f={f} index={i} />)}
       </div>
 

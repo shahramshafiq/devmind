@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 const CONTACT_INFO = [
   {
@@ -45,6 +46,9 @@ const CONTACT_INFO = [
 ]
 
 export default function Contact() {
+  const vw = useWindowWidth()
+  const isMob = vw < 640
+  const isTab = vw < 1024
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' })
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
@@ -82,7 +86,7 @@ export default function Contact() {
       {/* ── Header ── */}
       <section style={{
         position: 'relative',
-        padding: '100px 48px 80px',
+        padding: isMob ? '72px 20px 60px' : isTab ? '100px 32px 72px' : '100px 48px 80px',
         maxWidth: 1200, margin: '0 auto',
       }}>
         <div style={{
@@ -113,8 +117,8 @@ export default function Contact() {
       </section>
 
       {/* ── Two-column layout ── */}
-      <section style={{ maxWidth: 1200, margin: '0 auto', padding: '0 48px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.7fr', gap: 28, alignItems: 'start' }}>
+      <section style={{ maxWidth: 1200, margin: '0 auto', padding: isMob ? '0 20px' : isTab ? '0 32px' : '0 48px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMob ? '1fr' : '1fr 1.7fr', gap: 28, alignItems: 'start' }}>
 
           {/* Left — info cards */}
           <motion.div
@@ -245,7 +249,7 @@ export default function Contact() {
               </AnimatePresence>
 
               <form onSubmit={handleSubmit}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMob ? '1fr' : '1fr 1fr', gap: 14, marginBottom: 14 }}>
                   <div>
                     <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.35)', marginBottom: 8, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                       Full Name *
@@ -270,7 +274,7 @@ export default function Contact() {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMob ? '1fr' : '1fr 1fr', gap: 14, marginBottom: 14 }}>
                   <div>
                     <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.35)', marginBottom: 8, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                       Phone
