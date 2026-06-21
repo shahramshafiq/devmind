@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 const AGENTS = [
   {
@@ -134,13 +135,18 @@ function AgentCard({ agent, index }) {
 }
 
 export default function HowItWorks() {
+  const vw = useWindowWidth()
+  const isMob = vw < 640
+  const isTab = vw < 1024
+  const cols = isMob ? '1fr' : isTab ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'
+
   return (
-    <section id="how-it-works" style={{ padding: '120px 48px', maxWidth: 1200, margin: '0 auto' }}>
+    <section id="how-it-works" style={{ padding: isMob ? '80px 20px' : isTab ? '100px 32px' : '120px 48px', maxWidth: 1200, margin: '0 auto' }}>
 
       {/* Header row */}
       <div style={{ marginBottom: 64 }}>
         <div className="section-label">The Pipeline</div>
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24 }}>
+        <div style={{ display: 'flex', flexDirection: isMob ? 'column' : 'row', alignItems: isMob ? 'flex-start' : 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24 }}>
           <h2 style={{
             fontFamily: "'Syne', sans-serif",
             fontSize: 'clamp(34px, 4.5vw, 58px)',
@@ -161,7 +167,7 @@ export default function HowItWorks() {
       {/* Grid */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateColumns: cols,
         gap: 14,
       }}>
         {AGENTS.map((agent, i) => <AgentCard key={agent.name} agent={agent} index={i} />)}

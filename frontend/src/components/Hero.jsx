@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 const TECH_STACK = ['LangGraph', 'FastAPI', 'ChromaDB', 'Groq', 'GitHub']
 
@@ -14,6 +15,9 @@ const AGENTS = [
 export default function Hero() {
   const scrollTry = () => document.getElementById('try-it')?.scrollIntoView({ behavior: 'smooth' })
   const scrollHow = () => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })
+  const vw = useWindowWidth()
+  const isMob = vw < 640
+  const isTab = vw < 1024
 
   return (
     <section id="hero" style={{ position: 'relative', minHeight: 'calc(100vh - 64px)', overflow: 'hidden' }}>
@@ -72,7 +76,7 @@ export default function Hero() {
       </div>
 
       {/* ── Content ── */}
-      <div style={{ position: 'relative', zIndex: 2, maxWidth: 1200, margin: '0 auto', padding: '100px 48px 0' }}>
+      <div style={{ position: 'relative', zIndex: 2, maxWidth: 1200, margin: '0 auto', padding: isMob ? '72px 20px 0' : isTab ? '100px 32px 0' : '100px 48px 0' }}>
 
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}>
 
@@ -84,13 +88,13 @@ export default function Hero() {
           {/* Headline */}
           <h1 style={{
             fontFamily: "'Syne', sans-serif",
-            fontSize: 'clamp(50px, 7.5vw, 96px)',
+            fontSize: isMob ? 'clamp(40px, 11vw, 56px)' : 'clamp(50px, 7.5vw, 96px)',
             fontWeight: 800,
             lineHeight: 1.0,
             letterSpacing: '-0.04em',
             color: '#ffffff',
             marginBottom: 28,
-            maxWidth: 640,
+            maxWidth: isMob ? '100%' : 640,
           }}>
             From GitHub<br />
             Issue to<br />
@@ -138,7 +142,7 @@ export default function Hero() {
           </div>
 
           {/* Stat cards */}
-          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 80 }}>
+          <div style={{ display: isMob ? 'grid' : 'flex', gridTemplateColumns: isMob ? '1fr 1fr' : undefined, gap: 14, flexWrap: 'wrap', marginBottom: isMob ? 48 : 80 }}>
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6 }}
               style={{
@@ -222,8 +226,8 @@ export default function Hero() {
       <div style={{
         position: 'relative', zIndex: 2,
         maxWidth: 1200, margin: '0 auto',
-        padding: '20px 48px 36px',
-        display: 'flex', alignItems: 'center', gap: 32, flexWrap: 'wrap',
+        padding: isMob ? '16px 20px 28px' : isTab ? '20px 32px 32px' : '20px 48px 36px',
+        display: 'flex', alignItems: 'center', gap: isMob ? 20 : 32, flexWrap: 'wrap',
         borderTop: '1px solid rgba(255,255,255,0.06)',
       }}>
         <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)', fontWeight: 500, marginRight: 8 }}>Powered by</span>

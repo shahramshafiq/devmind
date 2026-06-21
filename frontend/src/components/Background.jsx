@@ -4,86 +4,101 @@ const NOISE = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
 
 function ParticleCanvas() {
   const ref = useRef(null)
+  const mouse = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
-    const canvas = ref.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
+    const cvs = ref.current
+    if (!cvs) return
+    const ctx = cvs.getContext('2d')
 
-    let w = (canvas.width  = window.innerWidth)
-    let h = (canvas.height = window.innerHeight)
+    const onMove = e => { mouse.current = { x: e.clientX, y: e.clientY } }
+    window.addEventListener('mousemove', onMove, { passive: true })
 
-    const COUNT = 55
-    const pts = Array.from({ length: COUNT }, () => ({
-      x:  Math.random() * w,
-      y:  Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.35,
-      vy: (Math.random() - 0.5) * 0.35,
-      r:  Math.random() * 1.5 + 0.5,
+    const resize = () => {
+      cvs.width = window.innerWidth
+      cvs.height = window.innerHeight
+    }
+    resize()
+    window.addEventListener('resize', resize, { passive: true })
+
+    const N = 65
+    const pts = Array.from({ length: N }, () => ({
+      x: Math.random() * cvs.width,
+      y: Math.random() * cvs.height,
+      z: 0.2 + Math.random() * 0.8,
+      vx: (Math.random() - 0.5) * 0.32,
+      vy: (Math.random() - 0.5) * 0.32,
     }))
 
     let raf
+    const tick = () => {
+      ctx.clearRect(0, 0, cvs.width, cvs.height)
 
-    function draw() {
-      ctx.clearRect(0, 0, w, h)
+      const hw = cvs.width / 2
+      const hh = cvs.height / 2
+      const mx = mouse.current.x || hw
+      const my = mouse.current.y || hh
 
-      for (let i = 0; i < COUNT; i++) {
-        for (let j = i + 1; j < COUNT; j++) {
-          const dx   = pts[i].x - pts[j].x
-          const dy   = pts[i].y - pts[j].y
-          const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < 170) {
-            const alpha = (1 - dist / 170) * 0.18
-            ctx.strokeStyle = `rgba(255,80,20,${alpha})`
-            ctx.lineWidth   = 0.8
+      const disp = pts.map(p => {
+        p.x += p.vx
+        p.y += p.vy
+        if (p.x < -10) p.x = cvs.width + 10
+        if (p.x > cvs.width + 10) p.x = -10
+        if (p.y < -10) p.y = cvs.height + 10
+        if (p.y > cvs.height + 10) p.y = -10
+        return {
+          x: p.x + (mx - hw) * p.z * 0.016,
+          y: p.y + (my - hh) * p.z * 0.016,
+          z: p.z,
+        }
+      })
+
+      ctx.lineWidth = 0.7
+      for (let i = 0; i < N; i++) {
+        for (let j = i + 1; j < N; j++) {
+          const dx = disp[i].x - disp[j].x
+          const dy = disp[i].y - disp[j].y
+          const d = Math.sqrt(dx * dx + dy * dy)
+          if (d < 160) {
+            const a = (1 - d / 160) * 0.13 * ((disp[i].z + disp[j].z) / 2)
             ctx.beginPath()
-            ctx.moveTo(pts[i].x, pts[i].y)
-            ctx.lineTo(pts[j].x, pts[j].y)
+            ctx.moveTo(disp[i].x, disp[i].y)
+            ctx.lineTo(disp[j].x, disp[j].y)
+            ctx.strokeStyle = `rgba(255,69,0,${a})`
             ctx.stroke()
           }
         }
       }
 
-      for (const p of pts) {
+      disp.forEach(p => {
         ctx.beginPath()
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(255,100,30,0.5)`
+        ctx.arc(p.x, p.y, 0.7 + p.z * 2.2, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(255,${Math.round(55 + p.z * 65)},0,${0.15 + p.z * 0.5})`
         ctx.fill()
+      })
 
-        p.x += p.vx
-        p.y += p.vy
-        if (p.x < 0 || p.x > w) p.vx *= -1
-        if (p.y < 0 || p.y > h) p.vy *= -1
-      }
-
-      raf = requestAnimationFrame(draw)
+      raf = requestAnimationFrame(tick)
     }
-
-    draw()
-
-    const onResize = () => {
-      w = canvas.width  = window.innerWidth
-      h = canvas.height = window.innerHeight
-    }
-    window.addEventListener('resize', onResize, { passive: true })
+    tick()
 
     return () => {
       cancelAnimationFrame(raf)
-      window.removeEventListener('resize', onResize)
+      window.removeEventListener('resize', resize)
+      window.removeEventListener('mousemove', onMove)
     }
   }, [])
 
   return (
-    <canvas
-      ref={ref}
-      style={{
-        position: 'absolute', inset: 0,
-        width: '100%', height: '100%',
-        opacity: 0.6,
-      }}
-    />
+    <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.7 }} />
   )
 }
+
+const RINGS = [
+  { size: 220, top: '12%', left: '4%',  dur: 18, del: 0 },
+  { size: 140, top: '55%', right: '5%', dur: 23, del: -7 },
+  { size: 100, top: '30%', right: '18%',dur: 16, del: -3 },
+  { size: 70,  top: '70%', left: '20%', dur: 21, del: -11 },
+]
 
 export default function Background() {
   return (
@@ -104,7 +119,7 @@ export default function Background() {
         mixBlendMode: 'screen',
       }} />
 
-      {/* 3-D perspective grid — scrolls toward viewer */}
+      {/* 3D perspective grid */}
       <div style={{
         position: 'absolute',
         top: '44%', left: '-80%', right: '-80%', bottom: '-40%',
@@ -124,7 +139,7 @@ export default function Background() {
         }} />
       </div>
 
-      {/* Fade grid — top & bottom */}
+      {/* Grid fade top + bottom */}
       <div style={{
         position: 'absolute', inset: 0,
         background:
@@ -135,8 +150,34 @@ export default function Background() {
           '#080808 100%)',
       }} />
 
-      {/* Particle network */}
+      {/* Particle network with mouse parallax */}
       <ParticleCanvas />
+
+      {/* Floating wireframe rings */}
+      {RINGS.map((r, i) => (
+        <div key={i} style={{
+          position: 'absolute',
+          top: r.top, left: r.left, right: r.right,
+          width: r.size, height: r.size,
+          borderRadius: '50%',
+          border: '1px solid rgba(255,69,0,0.09)',
+          animation: `orb-float ${r.dur}s ease-in-out ${r.del}s infinite`,
+          opacity: 0.65,
+          flexShrink: 0,
+        }}>
+          <div style={{
+            position: 'absolute', inset: '22%',
+            borderRadius: '50%',
+            border: '1px solid rgba(255,69,0,0.06)',
+          }}>
+            <div style={{
+              position: 'absolute', inset: '30%',
+              borderRadius: '50%',
+              border: '1px solid rgba(255,69,0,0.04)',
+            }} />
+          </div>
+        </div>
+      ))}
 
       {/* Ambient orange orbs */}
       <div style={{

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import useWindowWidth from './hooks/useWindowWidth'
 import { motion, AnimatePresence } from 'framer-motion'
 import Background from './components/Background'
 import Header from './components/Header'
@@ -56,6 +57,8 @@ export default function App() {
 
   const ticker = useRef(null)
   const runUrl = useRef('')
+  const appW = useWindowWidth()
+  const isMob = appW < 640
 
   useEffect(() => {
     fetch(`${API}/health`)
@@ -221,7 +224,7 @@ export default function App() {
                 <Features />
 
                 {/* CTA / Try It section */}
-                <section id="try-it" style={{ padding: '80px 24px 100px', position: 'relative' }}>
+                <section id="try-it" style={{ padding: isMob ? '60px 16px 80px' : '80px 24px 100px', position: 'relative' }}>
                   {/* Subtle glow behind input */}
                   <div style={{
                     position: 'absolute', top: '30%', left: '50%', transform: 'translate(-50%, -50%)',
@@ -268,7 +271,7 @@ export default function App() {
             {/* Pipeline / running / done / error view */}
             {page === 'home' && screen !== 'idle' && (
               <motion.div key="pipeline" {...pageTransition}>
-                <div style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 32px 60px' }}>
+                <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMob ? '16px 16px 48px' : '28px 32px 60px' }}>
 
                   {/* Status bar */}
                   <div style={{
@@ -315,7 +318,7 @@ export default function App() {
                   </div>
 
                   {/* Main grid */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '360px 1fr', gap: 20, alignItems: 'start' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: isMob ? '1fr' : '360px 1fr', gap: 20, alignItems: 'start' }}>
                     <AgentPipeline agents={AGENTS} statuses={statuses} activeIdx={activeIdx} elapsed={elapsed} isRunning={screen === 'running'} />
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
