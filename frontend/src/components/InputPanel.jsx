@@ -70,7 +70,7 @@ export default function InputPanel({ issueUrl, setIssueUrl, onRun }) {
           color: 'rgba(255,255,255,0.35)',
           fontFamily: "'JetBrains Mono', monospace",
         }}>Enter</kbd>{' '}
-        to run · Backend must be running at localhost:8000
+        to run · Paste any public GitHub issue URL
       </p>
 
     </section>

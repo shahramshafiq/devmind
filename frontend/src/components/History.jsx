@@ -79,7 +79,7 @@ export default function History() {
   const toggle = (id) => setExpanded(prev => prev === id ? null : id)
 
   const fmtDate = (iso) => {
-    if (!iso) return '—'
+    if (!iso) return '-'
     const d = new Date(iso)
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
       + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
@@ -142,21 +142,21 @@ export default function History() {
                   onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                 >
                   <td style={{ ...tdStyle, color: 'rgba(255,255,255,0.25)', fontSize: 12, fontFamily: 'monospace' }}>
-                    {run.issue_number ? `#${run.issue_number}` : `—`}
+                    {run.issue_number ? `#${run.issue_number}` : `-`}
                   </td>
                   <td style={{ ...tdStyle, maxWidth: 280 }}>
                     <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
-                      {run.issue_title || '—'}
+                      {run.issue_title || '-'}
                     </div>
                   </td>
                   <td style={{ ...tdStyle, fontFamily: 'monospace', fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
-                    {run.repo_name || '—'}
+                    {run.repo_name || '-'}
                   </td>
                   <td style={tdStyle}>
                     <Badge decision={run.review_decision} />
                   </td>
                   <td style={{ ...tdStyle, textAlign: 'center' }}>
-                    {run.iterations ?? '—'}
+                    {run.iterations ?? '-'}
                   </td>
                   <td style={tdStyle}>
                     {run.tests_total != null ? (
@@ -165,7 +165,7 @@ export default function History() {
                         <span style={{ color: 'rgba(255,255,255,0.2)' }}>/</span>
                         <span style={{ color: 'rgba(255,255,255,0.5)' }}>{run.tests_total}</span>
                       </span>
-                    ) : '—'}
+                    ) : '-'}
                   </td>
                   <td style={{ ...tdStyle, fontSize: 12, color: 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap' }}>
                     {fmtDate(run.created_at)}
