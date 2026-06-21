@@ -142,7 +142,12 @@ def run_from_issue(body: RunFromIssueRequest):
         "iteration_count": 0,
         "logs": []
     }
-    final_state = pipeline.invoke(initial_state)
+    try:
+        final_state = pipeline.invoke(initial_state)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return {"error": f"Pipeline failed: {type(e).__name__}: {str(e)}"}
 
     from sandbox.runner import run_tests
     test_result = run_tests(
