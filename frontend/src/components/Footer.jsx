@@ -13,7 +13,7 @@ export default function Footer() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
           <div style={{
             width: 26, height: 26, borderRadius: 7,
-            background: 'linear-gradient(135deg, #7c3aed 0%, #e879f9 100%)',
+            background: 'linear-gradient(135deg, #ff4500 0%, #ff8c00 100%)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">

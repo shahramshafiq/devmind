@@ -13,8 +13,8 @@ function NavBtn({ children, active, onClick }) {
         fontSize: 13, fontWeight: 500,
         border: 'none', cursor: 'pointer',
         transition: 'all 0.15s ease',
-        background: active ? 'rgba(124,58,237,0.15)' : hovered ? 'rgba(255,255,255,0.05)' : 'transparent',
-        color: active ? '#c4b5fd' : hovered ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.4)',
+        background: active ? 'rgba(255,69,0,0.12)' : hovered ? 'rgba(255,255,255,0.05)' : 'transparent',
+        color: active ? '#ff8c42' : hovered ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.4)',
       }}
     >
       {children}
@@ -74,9 +74,9 @@ export default function Header({ backendOk, page, setPage }) {
       >
         <div style={{
           width: 33, height: 33, borderRadius: 9,
-          background: 'linear-gradient(135deg, #7c3aed 0%, #e879f9 100%)',
+          background: 'linear-gradient(135deg, #ff4500 0%, #ff8c00 100%)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 0 18px rgba(124,58,237,0.42)',
+          boxShadow: '0 0 18px rgba(255,69,0,0.45)',
           flexShrink: 0,
         }}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
@@ -122,11 +122,11 @@ export default function Header({ backendOk, page, setPage }) {
           onMouseLeave={() => setTryHovered(false)}
           style={{
             padding: '7px 18px',
-            background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)',
+            background: 'linear-gradient(135deg, #ff4500 0%, #ff8c00 100%)',
             border: 'none', borderRadius: 9,
             color: 'white', fontSize: 13, fontWeight: 600,
             cursor: 'pointer',
-            boxShadow: tryHovered ? '0 0 28px rgba(124,58,237,0.65)' : '0 0 16px rgba(124,58,237,0.35)',
+            boxShadow: tryHovered ? '0 0 28px rgba(255,69,0,0.65)' : '0 0 16px rgba(255,69,0,0.38)',
             transform: tryHovered ? 'translateY(-1px)' : 'translateY(0)',
             transition: 'box-shadow 0.2s, transform 0.15s',
           }}
