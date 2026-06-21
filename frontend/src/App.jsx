@@ -188,7 +188,7 @@ export default function App() {
       <Background />
 
       <div style={{ position: 'relative', zIndex: 10 }}>
-        <Header backendOk={backendOk} page={page} setPage={setPage} />
+        <Header backendOk={backendOk} page={page} setPage={setPage} setScreen={setScreen} />
 
         <main>
           <AnimatePresence mode="wait">

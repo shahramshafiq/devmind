@@ -93,7 +93,7 @@ function NavItem({ item, active, onClick }) {
   )
 }
 
-export default function Header({ backendOk, page, setPage }) {
+export default function Header({ backendOk, page, setPage, setScreen }) {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const w = useWindowWidth()
@@ -109,11 +109,12 @@ export default function Header({ backendOk, page, setPage }) {
     if (!isMobile) setMobileOpen(false)
   }, [isMobile])
 
-  const goHome = () => { setPage('home'); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const goHome = () => { setPage('home'); setScreen?.('idle'); window.scrollTo({ top: 0, behavior: 'smooth' }) }
 
   const handleNav = (item) => {
     if (item.action === 'scroll') {
       setPage('home')
+      setScreen?.('idle')
       setTimeout(() => document.getElementById(item.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
     } else {
       setPage(item.target)
