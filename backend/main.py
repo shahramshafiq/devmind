@@ -176,8 +176,8 @@ def run_from_issue(body: RunFromIssueRequest):
         "pr_url":          pr_result.get("pr_url"),
         "pr_title":        final_state["pr_title"],
         "pr_body":         pr_body,
-        "tests_passed":    tr.get("passed"),
-        "tests_failed":    tr.get("failed"),
+        "tests_passed":    tr.get("passed_count"),
+        "tests_failed":    tr.get("failed_count"),
         "tests_total":     tr.get("total"),
     })
 
