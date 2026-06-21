@@ -34,7 +34,7 @@ export default function Footer() {
         </p>
 
         <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.14)' }}>
-          2025 DevMind
+          © 2026 DevMind
         </p>
       </div>
     </footer>
