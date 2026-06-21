@@ -93,10 +93,11 @@ export default function Header({ backendOk, page, setPage }) {
 
       {/* Nav */}
       <nav style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-        <NavItem label="Features" hasArrow active={false} onClick={() => scrollTo('features')} />
-        <NavItem label="How It Works" active={false} onClick={() => scrollTo('how-it-works')} />
-        <NavItem label="Try It" active={false} onClick={() => scrollTo('try-it')} />
-        <NavItem label="History" active={page === 'history'} onClick={() => setPage('history')} />
+        <NavItem label="Features"     active={false}               onClick={() => scrollTo('features')} />
+        <NavItem label="How It Works" active={false}               onClick={() => scrollTo('how-it-works')} />
+        <NavItem label="About"        active={page === 'about'}    onClick={() => setPage('about')} />
+        <NavItem label="Contact"      active={page === 'contact'}  onClick={() => setPage('contact')} />
+        <NavItem label="History"      active={page === 'history'}  onClick={() => setPage('history')} />
       </nav>
 
       {/* Right */}
@@ -110,7 +111,7 @@ export default function Header({ backendOk, page, setPage }) {
         </div>
 
         <button
-          onClick={() => scrollTo('try-it')}
+          onClick={() => { setPage('contact') }}
           onMouseEnter={() => setTryH(true)}
           onMouseLeave={() => setTryH(false)}
           className="btn-white"

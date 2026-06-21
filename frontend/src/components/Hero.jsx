@@ -129,30 +129,12 @@ export default function Hero() {
               </span>
             </button>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ display: 'flex' }}>
-                {AGENTS.slice(0, 3).map((a, i) => (
-                  <div key={i} style={{
-                    width: 34, height: 34, borderRadius: '50%',
-                    background: a.color,
-                    border: '2px solid #080808',
-                    marginLeft: i > 0 ? -10 : 0,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 11, fontWeight: 800,
-                    color: '#fff',
-                    flexShrink: 0,
-                    zIndex: 3 - i,
-                    position: 'relative',
-                  }}>
-                    {a.label[0]}
-                  </div>
-                ))}
-              </div>
-              <div>
-                <div style={{ fontSize: 13.5, fontWeight: 600, color: '#ffffff', lineHeight: 1.3 }}>800+ Repos indexed</div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)', marginTop: 1 }}>across 3+ years</div>
-              </div>
-            </div>
+            <button className="btn-ghost" onClick={scrollHow} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/>
+              </svg>
+              See how it works
+            </button>
           </div>
 
           {/* Stat cards */}
