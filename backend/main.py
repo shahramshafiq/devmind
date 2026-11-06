@@ -14,6 +14,11 @@ sys.path.insert(0, os.path.dirname(__file__))
 from database.db import init_db, save_run, get_history
 init_db()
 
+# Open the vector store at startup: the lazy first open is slow, and two requests
+# arriving during it crashed with KeyError './chromadb_store'.
+from rag.indexer import get_chroma
+get_chroma()
+
 app = FastAPI(title="DevMind API", version="0.1.0")
 
 app.add_middleware(
