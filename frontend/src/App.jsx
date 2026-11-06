@@ -17,7 +17,7 @@ import IndexedRepos from './components/IndexedRepos'
 import About from './components/About'
 import Contact from './components/Contact'
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+import { API } from './api'
 
 const AGENTS = [
   { id: 'analyst',   label: 'Issue Analyst', icon: 'search', color: '#ff6b35' },
@@ -189,6 +189,22 @@ export default function App() {
 
       <div style={{ position: 'relative', zIndex: 10 }}>
         <Header backendOk={backendOk} page={page} setPage={setPage} setScreen={setScreen} />
+
+        {backendOk === false && (
+          <div style={{
+            maxWidth: 760, margin: '14px auto 0', padding: '12px 18px',
+            background: 'rgba(255,69,0,0.08)', border: '1px solid rgba(255,69,0,0.3)',
+            borderRadius: 12, color: 'rgba(255,255,255,0.82)', fontSize: 13.5,
+            lineHeight: 1.55, textAlign: 'center',
+          }}>
+            Live pipeline runs are paused: the backend runs on free hosting that is not always on.{' '}
+            <a href="https://github.com/shahramshafiq/devmind/blob/main/demo.mp4" target="_blank" rel="noreferrer"
+               style={{ color: '#ff8c42', fontWeight: 600 }}>Watch the demo video</a>
+            {' '}or{' '}
+            <a href="https://github.com/shahramshafiq/devmind#running-locally" target="_blank" rel="noreferrer"
+               style={{ color: '#ff8c42', fontWeight: 600 }}>run it locally</a>.
+          </div>
+        )}
 
         <main>
           <AnimatePresence mode="wait">

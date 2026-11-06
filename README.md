@@ -142,12 +142,18 @@ curl -N -X POST http://localhost:8000/api/run-stream \
 | `GET /api/history` | Returns the 50 most recent runs |
 | `GET /health` | Health check |
 
+## Running it live for free
+
+The public site is a static frontend on Vercel. The backend needs an always-on server, which free hosting does not offer, so the live site shows an "offline" banner and links to the demo video unless a backend is reachable.
+
+To go live from your own PC without paying: `winget install Cloudflare.cloudflared`, then run `.\scripts\start-demo.ps1`. It starts the backend and a free Cloudflare quick tunnel, and prints a link like `https://devmind-theta.vercel.app/?api=https://<name>.trycloudflare.com`. Open that link and the site talks to your PC until you press Ctrl+C. Anyone with the link can start runs with your keys while it is up, and Cloudflare cuts requests that are silent for about 100 seconds, so index large repositories first.
+
 ## Limitations and Roadmap
 
 - The GitHub token must have write access to the target repository, because the branch, commits and pull request are created directly on it.
 - The QA agent writes pytest tests, so test results are most meaningful for Python repositories. Results are recorded and shown, but they do not block the pull request.
 - Generated tests run in a temporary-directory subprocess with a timeout. A container-based sandbox would give stronger isolation.
-- DevMind has no automated test suite of its own yet.
+- The test suite is a smoke test (`cd backend && python -m pytest tests`): health route, file parsers, a live LLM call, and the real agents through the Critic. It needs `GROQ_API_KEY` and an indexed repo, and it never opens a pull request.
 
 ## Author
 
