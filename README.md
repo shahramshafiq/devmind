@@ -18,7 +18,7 @@ Fixing a GitHub issue means reading the codebase, planning a change, writing cod
 
 ## Demo
 
-- Live app: [devmind-theta.vercel.app](https://devmind-theta.vercel.app)
+- Frontend: [devmind-theta.vercel.app](https://devmind-theta.vercel.app) (runs are paused and the page shows an offline banner unless a backend is up, see [Running it live for free](#running-it-live-for-free))
 - [Watch the demo video](demo.mp4)
 
 ## Key Features
@@ -39,11 +39,11 @@ Fixing a GitHub issue means reading the codebase, planning a change, writing cod
 | Backend | Python, FastAPI, Uvicorn |
 | Agent orchestration | LangGraph, LangChain |
 | LLM | Groq API (`openai/gpt-oss-120b`) via `langchain-groq` |
-| Retrieval | ChromaDB, sentence-transformers (`all-MiniLM-L6-v2`) |
+| Retrieval | ChromaDB with its bundled ONNX build of `all-MiniLM-L6-v2` (no PyTorch) |
 | GitHub integration | PyGithub |
 | Persistence | SQLAlchemy, SQLite or PostgreSQL (`psycopg2`) |
 | Frontend | React 19, Vite, Tailwind CSS 4, Framer Motion |
-| Deployment | Vercel (frontend), Railway (backend, `Procfile` and `nixpacks.toml`) |
+| Deployment | Vercel (frontend). The backend runs from your own PC through a free Cloudflare tunnel (`scripts/start-demo.ps1`); `render.yaml`, `Procfile` and `nixpacks.toml` are included for hosting it elsewhere |
 
 ## Project Structure
 
