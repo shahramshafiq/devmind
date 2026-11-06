@@ -10,7 +10,7 @@ def parse_files(text):
     matches = re.findall(pattern, text, re.DOTALL)
     result = {}
     for filepath, content in matches:
-        filepath = filepath.strip()
+        filepath = filepath.strip().strip('*`')
         content = content.strip()
         if filepath and content:
             result[filepath] = content

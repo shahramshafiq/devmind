@@ -29,7 +29,7 @@ def parse_code_changes(text):
     matches = re.findall(pattern, text, re.DOTALL)
     files = {}
     for filepath, content in matches:
-        filepath = filepath.strip()
+        filepath = filepath.strip().strip('*`')
         content = content.strip()
         if filepath and content:
             files[filepath] = content

@@ -35,9 +35,15 @@ class RetryingLLM:
 
 
 def get_llm(temperature=None):
+    extra = {}
+    if "gpt-oss" in LLM_MODEL:
+        # Reasoning models burn the default token cap on hidden thinking and
+        # return empty content (finish_reason=length). Think less, allow more.
+        extra = {"reasoning_effort": "low", "max_tokens": 8192}
     llm = ChatGroq(
         api_key=GROQ_API_KEY,
         model=LLM_MODEL,
         temperature=temperature if temperature is not None else LLM_TEMPERATURE,
+        **extra,
     )
     return RetryingLLM(llm)

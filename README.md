@@ -38,7 +38,7 @@ Fixing a GitHub issue means reading the codebase, planning a change, writing cod
 |---|---|
 | Backend | Python, FastAPI, Uvicorn |
 | Agent orchestration | LangGraph, LangChain |
-| LLM | Groq API (`llama-3.3-70b-versatile`) via `langchain-groq` |
+| LLM | Groq API (`openai/gpt-oss-120b`) via `langchain-groq` |
 | Retrieval | ChromaDB, sentence-transformers (`all-MiniLM-L6-v2`) |
 | GitHub integration | PyGithub |
 | Persistence | SQLAlchemy, SQLite or PostgreSQL (`psycopg2`) |
